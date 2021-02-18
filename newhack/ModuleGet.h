@@ -6,5 +6,7 @@ public:
 	DWORD getCLIENT_DLL();
 	DWORD getLocalPlayer();
 	int getplayerHealth();
+	DWORD getEntityList();
+	DWORD getGlowObjectManager();
 };
 

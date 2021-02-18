@@ -23,7 +23,7 @@ void Misc::radar(bool radarHax)
 {
 	if (radarHax)
 	{
-		for (int i = 1; i < 64; i++)
+		for (int i = 1; i < 32; i++)
 		{
 			currentEntity = *(DWORD*)(CLIENT_DLL + dwEntityList + (i * 0x10));
 			if (currentEntity > 0)
@@ -64,4 +64,38 @@ void Misc::noflash(float flash)
 		*(float*)(localPlayer + m_flFlashMaxAlpha) = (flash * 2.55);
 }
 
+void Misc::Glow(bool glow)
+{
+	if (glow)
+	{
+		int localTeam = *(int*)(modget.getLocalPlayer() + m_iTeamNum);
+		for (int i = 1; i < 32; i++)
+		{
+			currentEntity = *(DWORD*)(CLIENT_DLL + dwEntityList + (i * 0x10));
+			if (currentEntity == 0) continue;
+
+			int glowindex = *(int*)(currentEntity + m_iGlowIndex);
+			int entityTeam = *(int*)(currentEntity + m_iTeamNum);
+
+			if (entityTeam == localTeam)
+			{
+				//Local Team
+				*(float*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0x4)) = 0.f; //r
+				*(float*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0x8)) = 1.f; //g
+				*(float*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0xC)) = 0.f; //b
+				*(float*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0x10)) = 1.7f; //a
+			}
+			else
+			{
+				//Enemy Team
+				*(float*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0x4)) = 1.f; //r
+				*(float*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0x8)) = 0.f; //g
+				*(float*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0xC)) = 0.f; //b
+				*(float*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0x10)) = 1.7f; //a
+			}
+			*(bool*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0x24)) = true;
+			*(bool*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0x25)) = false;
+		}
+	}
+}
 

@@ -37,6 +37,7 @@ bool new_window = false;
 bool radarHax = false;
 bool bhop = false;
 bool nothing = false;
+bool glow = false;
 
 
 int playercheck = 0;
@@ -120,6 +121,7 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 
 				ImGui::Checkbox("BHOP", &bhop);
 				ImGui::Checkbox("RADAR", &radarHax);
+				ImGui::Checkbox("Glow", &glow);
 				ImGui::SliderFloat("", &flash, 0.f, 100, "%.2f");
 				if (ImGui::IsItemHovered())
 				{
@@ -218,6 +220,7 @@ DWORD WINAPI heavyThread(LPVOID lpReserved)
 		{
 			misc.bhop(bhop);
 			misc.noflash(flash);
+			misc.Glow(glow);
 		}
 	return 0;
 }

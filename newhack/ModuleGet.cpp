@@ -16,3 +16,12 @@ int ModuleGet::getplayerHealth()
 {
 	return *(int*)(getLocalPlayer() + m_iHealth);
 }
+DWORD ModuleGet::getGlowObjectManager()
+{
+	return *(DWORD*)(getCLIENT_DLL() + dwGlowObjectManager);
+}
+
+DWORD ModuleGet::getEntityList()
+{
+	return *(DWORD*)(getCLIENT_DLL() + dwEntityList);
+}

@@ -9,5 +9,6 @@ public:
 	int playercheck(int playercheck);
 	float velocity();
 	void noflash(float flash);
+	void Glow(bool glow);
 };
 
