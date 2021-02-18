@@ -43,9 +43,24 @@ bool glow = false;
 int playercheck = 0;
 int healthv = 0;
 int bhop_timing = 0;  //	DO THIS :D
+int window_no_move = 4;
 
 float flspeed;
 float flash = 100;
+
+
+//glow//
+float red1;
+float green1 = 1.f;
+float blue1;
+float alpha1 = 1.f;
+
+float red2 = 1.f;
+float green2;
+float blue2;
+float alpha2 = 1.f;
+//glow//
+
 
 ImVec2 MAINWINDOW_POS;
 ImVec2 NEWWINDOW_SIZE;
@@ -82,6 +97,7 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 
 	if (isopen) // insert open
 	{
+		
 
 
 		// START OF MAIN_WINDOW
@@ -113,6 +129,8 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 			if (ImGui::MenuItem("dev"))
 			{
 			new_window = !new_window;
+			window_no_move = 4;
+			ImGui::SetNextWindowPos(ImVec2(MAINWINDOW_POS.x, MAINWINDOW_POS.y + 262));
 			}
 			ImGui::EndMenu();
 		}
@@ -138,9 +156,12 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 		// START OF NEW_WINDOW/DEV_WINDOW
 		if (new_window)
 		{
-			ImGui::Begin("Developer Tool Window", &new_window, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove);
+			ImGui::Begin("Developer Tool Window", &new_window, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | window_no_move);
 			ImGui::SetWindowSize(ImVec2(400, 130));
-			ImGui::SetWindowPos(ImVec2(MAINWINDOW_POS.x, MAINWINDOW_POS.y + 262));
+			if (window_no_move == 4)
+			{
+				ImGui::SetWindowPos(ImVec2(MAINWINDOW_POS.x, MAINWINDOW_POS.y + 262));
+			}
 			std::string playercheckS = std::to_string(playercheck);
 			std::string healthS = std::to_string(healthv);
 			std::string FrameS = std::to_string(ImGui::GetIO().Framerate);
@@ -152,10 +173,55 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 			ImGui::Text(flspeedS.c_str()); ImGui::SameLine(); ImGui::Text(" | Velocity");
 			ImGui::Separator();
 			ImGui::Text(FrameS.c_str()); ImGui::SameLine(); ImGui::Text("UI.FPS");
+			ImGui::Separator();
+			if (window_no_move > 0)
+			{
+				if (ImGui::Button("Seperate"))
+				{
+					window_no_move = 0;
+				}
+			}
 			ImGui::End();
 		}
 		// END OF NEW_WINDOW/DEV_WINDOW
+		
+		//start of glow
+		if (glow)
+		{
+			ImGui::Begin("Glow", 0,
+				ImGuiWindowFlags_NoResize
+				| ImGuiWindowFlags_NoCollapse
+				| ImGuiWindowFlags_NoTitleBar
+				| ImGuiWindowFlags_NoMove);
+			ImGui::SetWindowSize(ImVec2(400, 260));
+			ImGui::SetWindowPos(ImVec2(MAINWINDOW_POS.x + 402, MAINWINDOW_POS.y));
+
+			ImGui::TextColored(ImVec4(25, 194, 98, 255), "Team");
+
+			ImGui::Separator();
+
+			ImGui::SliderFloat("RED###red1", &red1, 0.f, 1.f);
+			ImGui::SliderFloat("BLUE###blue1", &blue1, 0.f, 1.f);
+			ImGui::SliderFloat("GREEN###green1", &green1, 0.f, 1.f);
+			ImGui::SliderFloat("ALPHA###alpha1", &alpha1, 0.f, 1.f);
+
+			ImGui::Separator();
+
+			ImGui::TextColored(ImVec4(217, 72, 20, 255), "Enemy");
+
+			ImGui::Separator();
+
+			ImGui::SliderFloat("RED###red2", &red2, 0.f, 1.f);
+			ImGui::SliderFloat("BLUE###blue2", &blue2, 0.f, 1.f);
+			ImGui::SliderFloat("GREEN###green2", &green2, 0.f, 1.f);
+			ImGui::SliderFloat("ALPHA###alpha2", &alpha2, 0.f, 1.f);
+		ImGui::End();
+		}
+
+		//end of glow
 	}
+
+	
 
 	ImGui::EndFrame();
 	ImGui::Render();
@@ -220,7 +286,7 @@ DWORD WINAPI heavyThread(LPVOID lpReserved)
 		{
 			misc.bhop(bhop);
 			misc.noflash(flash);
-			misc.Glow(glow);
+			misc.Glow(glow, red1, green1, blue1, alpha1, red2, green2, blue2, alpha2);
 		}
 	return 0;
 }
@@ -234,7 +300,7 @@ DWORD WINAPI lightThread(LPVOID lpReserved)
 	}
 	while (join)
 	{
-		misc.radar(radarHax);
+		misc.radar(radarHax, glow);
 		healthv = modget1.getplayerHealth();
 		flspeed = misc.velocity();
 		Sleep(50);

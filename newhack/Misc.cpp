@@ -19,9 +19,9 @@ Misc::Misc()
 	//init
 }
 
-void Misc::radar(bool radarHax)
+void Misc::radar(bool radarHax, bool glow)
 {
-	if (radarHax)
+	if (radarHax && glow == false)
 	{
 		for (int i = 1; i < 32; i++)
 		{
@@ -36,14 +36,14 @@ void Misc::radar(bool radarHax)
 
 void Misc::bhop(bool bhop)
 {
-	if (bhop && GetAsyncKeyState(VK_SPACE))
-	{
-		DWORD flag = *(BYTE*)(localPlayer + m_fFlags);
-		if (modget.getplayerHealth() > 0 && flag & (1 << 0))
+		if (bhop && GetAsyncKeyState(VK_SPACE) && 0x8000)
 		{
-			*(DWORD*)(CLIENT_DLL + dwForceJump) = 6;
+			DWORD flag = *(BYTE*)(localPlayer + m_fFlags);
+			if (modget.getplayerHealth() > 0 && flag & (1 << 0))
+			{
+				*(DWORD*)(CLIENT_DLL + dwForceJump) = 6;
+			}
 		}
-	}
 }
 
 int Misc::playercheck(int playercheck)
@@ -64,7 +64,7 @@ void Misc::noflash(float flash)
 		*(float*)(localPlayer + m_flFlashMaxAlpha) = (flash * 2.55);
 }
 
-void Misc::Glow(bool glow)
+void Misc::Glow(bool glow, float r1, float g1, float b1, float a1, float r2, float g2, float b2, float a2)
 {
 	if (glow)
 	{
@@ -80,18 +80,18 @@ void Misc::Glow(bool glow)
 			if (entityTeam == localTeam)
 			{
 				//Local Team
-				*(float*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0x4)) = 0.f; //r
-				*(float*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0x8)) = 1.f; //g
-				*(float*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0xC)) = 0.f; //b
-				*(float*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0x10)) = 1.7f; //a
+				*(float*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0x4)) = r1; //r
+				*(float*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0x8)) = g1; //g
+				*(float*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0xC)) = b1; //b
+				*(float*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0x10)) = a1; //a
 			}
 			else
 			{
 				//Enemy Team
-				*(float*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0x4)) = 1.f; //r
-				*(float*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0x8)) = 0.f; //g
-				*(float*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0xC)) = 0.f; //b
-				*(float*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0x10)) = 1.7f; //a
+				*(float*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0x4)) = r2; //r
+				*(float*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0x8)) = g2; //g
+				*(float*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0xC)) = b2; //b
+				*(float*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0x10)) = a2; //a
 			}
 			*(bool*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0x24)) = true;
 			*(bool*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0x25)) = false;
