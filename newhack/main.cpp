@@ -95,6 +95,9 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
+	D3DRECT rect = { 25, 25, 100, 100 };
+	pDevice->Clear(1, &rect, D3DCLEAR_TARGET, D3DCOLOR_ARGB(255, 255, 100, 0), 0, 0);
+
 	if (isopen) // insert open
 	{
 		
