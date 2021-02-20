@@ -1,7 +1,6 @@
 #include "includes.h"
 #include "Misc.h"
 #include "ModuleGet.h"
-#include "structandstuff.h"
 
 ModuleGet modget1;
 Misc misc;

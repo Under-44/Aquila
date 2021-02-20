@@ -1,4 +1,4 @@
-#pragma once
+#include "includes.h"
 
 struct vector
 {
@@ -16,4 +16,32 @@ enum class Entity_flags : unsigned int {
 	client = (1 << 7),
 	fake_client = (1 << 8),
 	in_water = (1 << 9)
-};
+}entflags;
+
+struct SGlowStructEnemy
+{
+	float red = 0.f;
+	float green = 0.f;
+	float blue = 0.f;
+	float alpha = 0.f;
+	uint8_t padding1[8];
+	float IDK = 1.f;
+	uint8_t padding2[4];
+	BYTE renderOccluded = true;
+	BYTE renderUnocclude = false;
+	BYTE fullBloom = false;
+}glowEnemyStrc;
+
+struct SGlowStructLocal
+{
+	float red = 0.f;
+	float green = 0.f;
+	float blue = 0.f;
+	float alpha = 0.f;
+	uint8_t padding1[8];
+	float IDK = 1.f;
+	uint8_t padding2[4];
+	BYTE renderOccluded = true;
+	BYTE renderUnocclude = false;
+	BYTE fullBloom = false;
+}glowLocalStrc;

@@ -4,6 +4,7 @@
 #include "ModuleGet.h"
 #include "structandstuff.h"
 
+
 ModuleGet modget;
 #define CLIENT_DLL modget.getCLIENT_DLL()
 #define localPlayer modget.getLocalPlayer()
@@ -79,7 +80,7 @@ void Misc::Glow(bool glow, float r1, float g1, float b1, float a1, float r2, flo
 
 			if (entityTeam == localTeam)
 			{
-				//Local Team
+				//Local Team // change to struct
 				*(float*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0x4)) = r1; //r
 				*(float*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0x8)) = g1; //g
 				*(float*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0xC)) = b1; //b
@@ -87,7 +88,7 @@ void Misc::Glow(bool glow, float r1, float g1, float b1, float a1, float r2, flo
 			}
 			else
 			{
-				//Enemy Team
+				//Enemy Team // change to struct
 				*(float*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0x4)) = r2; //r
 				*(float*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0x8)) = g2; //g
 				*(float*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0xC)) = b2; //b
