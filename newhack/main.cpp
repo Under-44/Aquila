@@ -48,7 +48,7 @@ int window_no_move = 4;
 
 float flspeed;
 float flash = 100;
-
+float flash255;
 
 //glow//
 float red1;
@@ -89,8 +89,7 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
-	D3DRECT rect = { 25, 25, 100, 100 };
-	pDevice->Clear(1, &rect, D3DCLEAR_TARGET, D3DCOLOR_ARGB(255, 255, 100, 0), 0, 0);
+	flash255 = (flash * 2.55);
 
 	if (isopen) // insert open
 	{
@@ -141,6 +140,8 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 				if (ImGui::IsItemHovered())
 				{
 					ImGui::SetTooltip("FLASH");
+					D3DRECT rect = { 25, 25, 100, 100 };
+					pDevice->Clear(1, &rect, D3DCLEAR_TARGET, D3DCOLOR_ARGB(255, 255, (int)flash255, 0), 0, 0);
 				}
 
 		ImGui::SetWindowSize(ImVec2(400, 260));
