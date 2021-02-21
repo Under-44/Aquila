@@ -8,6 +8,8 @@ Misc misc;
 BOOL WINAPI DllMain(HMODULE hMod, DWORD dwReason, LPVOID lpReserved);
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
+
+
 EndScene oEndScene = NULL;
 WNDPROC oWndProc;
 static HWND window = NULL;
@@ -60,16 +62,10 @@ float blue2;
 float alpha2 = 1.f;
 //glow//
 
+int windowHeight, windowWidth;
 
 ImVec2 MAINWINDOW_POS;
 ImVec2 NEWWINDOW_SIZE;
-
-
-
-void Haxinit()
-{
-
-}
 
 
 long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
@@ -77,7 +73,6 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 	if (!init)
 	{
 		InitImGui(pDevice);
-		Haxinit();
 		init = true;
 	}
 
@@ -256,6 +251,11 @@ HWND GetProcessWindow()
 {
 	window = NULL;
 	EnumWindows(EnumWindowsCallback, NULL);
+
+	RECT size;
+	GetWindowRect(window, &size);
+	windowWidth = size.right - size.left;
+	windowHeight = size.bottom - size.top;
 	return window;
 }
 
@@ -277,7 +277,7 @@ DWORD WINAPI MainThread(LPVOID lpReserved)
 	return TRUE;
 }
 
-DWORD WINAPI heavyThread(LPVOID lpReserved)
+DWORD WINAPI heavyThread(LPVOID lpReserved, HMODULE hMod)
 {
 	// no sleep
 	while (playercheck == 0)
@@ -290,10 +290,11 @@ DWORD WINAPI heavyThread(LPVOID lpReserved)
 			misc.noflash(flash);
 			misc.Glow(glow, red1, green1, blue1, alpha1, red2, green2, blue2, alpha2);
 		}
+		FreeLibraryAndExitThread(hMod, 0);
 	return 0;
 }
 
-DWORD WINAPI lightThread(LPVOID lpReserved)
+DWORD WINAPI lightThread(LPVOID lpReserved, HMODULE hMod)
 {
 	// sleep with 50
 	while (playercheck == 0)
@@ -308,16 +309,18 @@ DWORD WINAPI lightThread(LPVOID lpReserved)
 		Sleep(50);
 	}
 	misc.noflash(100); //	go back to default amount.
+	FreeLibraryAndExitThread(hMod, 0);
 	return 0;
 }
 
-DWORD WINAPI playercheckThread(LPVOID lpReserved)
+DWORD WINAPI playercheckThread(LPVOID lpReserved, HMODULE hMod)
 {
 	while (join)
 	{
 		playercheck = misc.playercheck(playercheck);
 		Sleep(50);
 	}
+	FreeLibraryAndExitThread(hMod, 0);
 	return 0;
 }
 
@@ -328,9 +331,9 @@ BOOL WINAPI DllMain(HMODULE hMod, DWORD dwReason, LPVOID lpReserved)
 	case DLL_PROCESS_ATTACH:
 		DisableThreadLibraryCalls(hMod);
 		CreateThread(nullptr, 0, MainThread, hMod, 0, nullptr);
-		CreateThread(nullptr, 0, heavyThread, hMod, 0, nullptr);
-		CreateThread(nullptr, 0, lightThread, hMod, 0, nullptr);
-		CreateThread(nullptr, 0, playercheckThread, hMod, 0, nullptr);
+		CreateThread(nullptr, 0, (LPTHREAD_START_ROUTINE)heavyThread, hMod, 0, nullptr);
+		CreateThread(nullptr, 0, (LPTHREAD_START_ROUTINE)lightThread, hMod, 0, nullptr);
+		CreateThread(nullptr, 0, (LPTHREAD_START_ROUTINE)playercheckThread, hMod, 0, nullptr);
 		break;
 	case DLL_PROCESS_DETACH:
 		

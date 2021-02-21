@@ -55,7 +55,7 @@ int Misc::playercheck(int playercheck)
 
 float Misc::velocity()
 {
-	vector playerVel = *(vector*)(localPlayer + 0x110); // 0x110 is = velocity.
+	vec3 playerVel = *(vec3*)(localPlayer + 0x110); // 0x110 is = velocity.
 	flSpeed = sqrt(pow(playerVel.y, 2) + pow(playerVel.z, 2)) + 0.00009;
 	return flSpeed;
 }
