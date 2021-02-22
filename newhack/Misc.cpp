@@ -20,21 +20,6 @@ Misc::Misc()
 	//init
 }
 
-void Misc::radar(bool radarHax, bool glow)
-{
-	if (radarHax && glow == false)
-	{
-		for (int i = 1; i < 32; i++)
-		{
-			currentEntity = *(DWORD*)(CLIENT_DLL + dwEntityList + (i * 0x10));
-			if (currentEntity > 0)
-			{
-				*(int*)(currentEntity + m_bSpotted) = 1;
-			}
-		}
-	}
-}
-
 void Misc::bhop(bool bhop)
 {
 		if (bhop && GetAsyncKeyState(VK_SPACE) && 0x8000)
@@ -65,15 +50,19 @@ void Misc::noflash(float flash)
 		*(float*)(localPlayer + m_flFlashMaxAlpha) = (flash * 2.55);
 }
 
-void Misc::Glow(bool glow, float r1, float g1, float b1, float a1, float r2, float g2, float b2, float a2)
+void Misc::Glow(bool glow, float r1, float g1, float b1, float a1, float r2, float g2, float b2, float a2, bool radarHax) // optimise this.
 {
-	if (glow)
+	int localTeam = *(int*)(modget.getLocalPlayer() + m_iTeamNum);
+	for (int i = 1; i < 32; i++)
 	{
-		int localTeam = *(int*)(modget.getLocalPlayer() + m_iTeamNum);
-		for (int i = 1; i < 32; i++)
+		currentEntity = *(DWORD*)(CLIENT_DLL + dwEntityList + (i * 0x10));
+		if (currentEntity == 0) continue;
+		if (radarHax)
 		{
-			currentEntity = *(DWORD*)(CLIENT_DLL + dwEntityList + (i * 0x10));
-			if (currentEntity == 0) continue;
+			*(int*)(currentEntity + m_bSpotted) = 1;
+		}
+		if (glow)
+		{
 
 			int glowindex = *(int*)(currentEntity + m_iGlowIndex);
 			int entityTeam = *(int*)(currentEntity + m_iTeamNum);

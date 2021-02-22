@@ -289,7 +289,7 @@ DWORD WINAPI heavyThread(LPVOID lpReserved, HMODULE hMod)
 		{
 			misc.bhop(bhop);
 			misc.noflash(flash);
-			misc.Glow(glow, red1, green1, blue1, alpha1, red2, green2, blue2, alpha2);
+			misc.Glow(glow, red1, green1, blue1, alpha1, red2, green2, blue2, alpha2, radarHax);
 		}
 		FreeLibraryAndExitThread(hMod, 0);
 	return 0;
@@ -304,7 +304,6 @@ DWORD WINAPI lightThread(LPVOID lpReserved, HMODULE hMod)
 	}
 	while (join)
 	{
-		misc.radar(radarHax, glow);
 		healthv = modget1.getplayerHealth();
 		flspeed = misc.velocity();
 		Sleep(50);
