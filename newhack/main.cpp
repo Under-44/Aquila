@@ -89,7 +89,7 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
-	flash255 = (flash * 2.55);
+	flash255 = (flash * 2.55); // testing d3d9
 
 	if (isopen) // insert open
 	{

@@ -34,9 +34,9 @@ struct SGlowStructEnemy
 	float green = 0.f;
 	float blue = 0.f;
 	float alpha = 0.f;
-	uint8_t padding1[8];
+	char padding1[8];
 	float IDK = 1.f;
-	uint8_t padding2[4];
+	char padding2[4];
 	BYTE renderOccluded = true;
 	BYTE renderUnocclude = false;
 	BYTE fullBloom = false;
@@ -48,9 +48,9 @@ struct SGlowStructLocal
 	float green = 0.f;
 	float blue = 0.f;
 	float alpha = 0.f;
-	uint8_t padding1[8];
+	char padding1[8];
 	float IDK = 1.f;
-	uint8_t padding2[4];
+	char padding2[4];
 	BYTE renderOccluded = true;
 	BYTE renderUnocclude = false;
 	BYTE fullBloom = false;
