@@ -119,11 +119,6 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 
 		//	startmenubar
 		ImGui::BeginMenuBar();
-		if (ImGui::BeginMenu("EXIT"))
-		{
-			ImGui::EndMenu();
-			DllMain(0, 0, 0);
-		}
 		if (ImGui::BeginMenu("tools"))
 		{
 			if (ImGui::MenuItem("dev"))
@@ -142,11 +137,15 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 				ImGui::Checkbox("RADAR", &radarHax);
 				ImGui::Checkbox("GLOW", &glow);
 				ImGui::SliderFloat("", &flash, 0.f, 100, "%.2f");
-				if (ImGui::IsItemHovered())
+				if (ImGui::IsItemActive())
 				{
 					ImGui::SetTooltip("FLASH");
 					D3DRECT rect = { 25, 25, 100, 100 };
 					pDevice->Clear(1, &rect, D3DCLEAR_TARGET, D3DCOLOR_ARGB(255, 255, static_cast<int>(flash255), 0), 0, 0);
+				}
+				if (ImGui::Button("UNHOOK"))
+				{
+					DllMain(0, 0, 0);
 				}
 
 		ImGui::SetWindowSize(ImVec2(400, 260));
@@ -296,7 +295,7 @@ DWORD WINAPI heavyThread(LPVOID lpReserved, HMODULE hMod)
 		{
 			misc.bhop(bhop);
 			misc.noflash(flash);
-			misc.EntityCheckHacks(radarHax, glow, EnemyGlow, TeamGlow);
+			misc.Glow(glow, EnemyGlow, TeamGlow);
 			if (playercheck == 0) { break; }
 			
 		}
@@ -315,6 +314,7 @@ DWORD WINAPI lightThread(LPVOID lpReserved, HMODULE hMod)
 		}
 		while (join)
 		{
+			misc.radar(radarHax);
 			healthv = modget1.getplayerHealth();
 			flspeed = misc.velocity();
 			if (playercheck == 0) { break; }
