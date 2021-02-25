@@ -1,14 +1,25 @@
-#include "includes.h"
+#include <Windows.h>
+#include <string>
+#include <d3d9.h>
+#include <d3dx9.h>
+#include "OffSets.h"
+#include "kiero/kiero.h"
+#include "kiero/minhook/include/MinHook.h"
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_win32.h"
+#include "imgui/imgui_impl_dx9.h"
+#define WINDOW_NAME "Aquila"
+typedef long(__stdcall* EndScene)(LPDIRECT3DDEVICE9);
+typedef LRESULT(CALLBACK* WNDPROC)(HWND, UINT, WPARAM, LPARAM);
 #include "Misc.h"
 #include "ModuleGet.h"
+
 
 ModuleGet modget1;
 Misc misc;
 
 BOOL WINAPI DllMain(HMODULE hMod, DWORD dwReason, LPVOID lpReserved);
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
-
-
 
 EndScene oEndScene = NULL;
 WNDPROC oWndProc;
@@ -50,17 +61,10 @@ float flspeed;
 float flash = 100;
 float flash255;
 
-//glow//
-float red1;
-float green1 = 1.f;
-float blue1;
-float alpha1 = 1.f;
 
-float red2 = 1.f;
-float green2;
-float blue2;
-float alpha2 = 1.f;
-//glow//
+AquilaColor TeamGlow = { 1.f, 0.f, 1.f, 0.f };  // alpha, red, green, blue
+AquilaColor EnemyGlow = { 1.f, 1.f, 0.f, 0.f }; // alpha, red, green, blue
+
 
 int windowHeight, windowWidth;
 
@@ -89,7 +93,7 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
-	flash255 = (flash * 2.55); // testing d3d9
+	flash255 = (flash * static_cast<float>(2.55)); // testing d3d9
 
 	if (isopen) // insert open
 	{
@@ -132,16 +136,17 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 		}
 		ImGui::EndMenuBar();
 		//	endmenubar
-
+				
+				//create trigger bot.
 				ImGui::Checkbox("BHOP", &bhop);
 				ImGui::Checkbox("RADAR", &radarHax);
-				ImGui::Checkbox("Glow", &glow);
+				ImGui::Checkbox("GLOW", &glow);
 				ImGui::SliderFloat("", &flash, 0.f, 100, "%.2f");
 				if (ImGui::IsItemHovered())
 				{
 					ImGui::SetTooltip("FLASH");
 					D3DRECT rect = { 25, 25, 100, 100 };
-					pDevice->Clear(1, &rect, D3DCLEAR_TARGET, D3DCOLOR_ARGB(255, 255, (int)flash255, 0), 0, 0);
+					pDevice->Clear(1, &rect, D3DCLEAR_TARGET, D3DCOLOR_ARGB(255, 255, static_cast<int>(flash255), 0), 0, 0);
 				}
 
 		ImGui::SetWindowSize(ImVec2(400, 260));
@@ -184,7 +189,7 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 		// END OF NEW_WINDOW/DEV_WINDOW
 		
 		//start of glow
-		if (glow)
+		if (glow) // really shit ui atm.
 		{
 			ImGui::Begin("Glow", 0,
 				ImGuiWindowFlags_NoResize
@@ -197,22 +202,22 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 			ImGui::TextColored(ImVec4(25, 194, 98, 255), "Team");
 
 			ImGui::Separator();
-
-			ImGui::SliderFloat("RED###red1", &red1, 0.f, 1.f);
-			ImGui::SliderFloat("BLUE###blue1", &blue1, 0.f, 1.f);
-			ImGui::SliderFloat("GREEN###green1", &green1, 0.f, 1.f);
-			ImGui::SliderFloat("ALPHA###alpha1", &alpha1, 0.f, 1.f);
+			//teamglow
+			ImGui::SliderFloat("RED###red1", &TeamGlow.r, 0.f, 1.f);
+			ImGui::SliderFloat("BLUE###blue1", &TeamGlow.b, 0.f, 1.f);
+			ImGui::SliderFloat("GREEN###green1", &TeamGlow.g, 0.f, 1.f);
+			ImGui::SliderFloat("ALPHA###alpha1", &TeamGlow.a, 0.f, 1.f);
 
 			ImGui::Separator();
 
 			ImGui::TextColored(ImVec4(217, 72, 20, 255), "Enemy");
 
 			ImGui::Separator();
-
-			ImGui::SliderFloat("RED###red2", &red2, 0.f, 1.f);
-			ImGui::SliderFloat("BLUE###blue2", &blue2, 0.f, 1.f);
-			ImGui::SliderFloat("GREEN###green2", &green2, 0.f, 1.f);
-			ImGui::SliderFloat("ALPHA###alpha2", &alpha2, 0.f, 1.f);
+			//enemyglow
+			ImGui::SliderFloat("RED###red2", &EnemyGlow.r, 0.f, 1.f);
+			ImGui::SliderFloat("BLUE###blue2", &EnemyGlow.b, 0.f, 1.f);
+			ImGui::SliderFloat("GREEN###green2", &EnemyGlow.g, 0.f, 1.f);
+			ImGui::SliderFloat("ALPHA###alpha2", &EnemyGlow.a, 0.f, 1.f);
 		ImGui::End();
 		}
 
@@ -280,33 +285,41 @@ DWORD WINAPI MainThread(LPVOID lpReserved)
 
 DWORD WINAPI heavyThread(LPVOID lpReserved, HMODULE hMod)
 {
-	// no sleep
-	while (playercheck == 0)
+	while (join)
 	{
-		Sleep(500); // buffer
-	}
+		// no sleep
+		while (playercheck == 0)
+		{
+			Sleep(500); // buffer
+		}
 		while (join)
 		{
 			misc.bhop(bhop);
 			misc.noflash(flash);
-			misc.Glow(glow, red1, green1, blue1, alpha1, red2, green2, blue2, alpha2, radarHax);
+			misc.EntityCheckHacks(radarHax, glow, EnemyGlow, TeamGlow);
+			if (playercheck == 0) { break; }
+			
 		}
+	}
 		FreeLibraryAndExitThread(hMod, 0);
 	return 0;
 }
 
 DWORD WINAPI lightThread(LPVOID lpReserved, HMODULE hMod)
 {
-	// sleep with 50
-	while (playercheck == 0)
-	{
-		Sleep(500); // buffer
-	}
-	while (join)
-	{
-		healthv = modget1.getplayerHealth();
-		flspeed = misc.velocity();
-		Sleep(50);
+	while (join) {
+		// sleep with 50
+		while (playercheck == 0)
+		{
+			Sleep(500); // buffer
+		}
+		while (join)
+		{
+			healthv = modget1.getplayerHealth();
+			flspeed = misc.velocity();
+			if (playercheck == 0) { break; }
+			Sleep(50);
+		}
 	}
 	misc.noflash(100); //	go back to default amount.
 	FreeLibraryAndExitThread(hMod, 0);
@@ -317,7 +330,7 @@ DWORD WINAPI playercheckThread(LPVOID lpReserved, HMODULE hMod)
 {
 	while (join)
 	{
-		playercheck = misc.playercheck(playercheck);
+		playercheck = misc.playercheck(playercheck); // bug here // idk if this is fixed now? but ill leave this here just incase.
 		Sleep(50);
 	}
 	FreeLibraryAndExitThread(hMod, 0);

@@ -2,7 +2,7 @@
 #include "Misc.h"
 #include "OffSets.h"
 #include "ModuleGet.h"
-#include "structandstuff.h"
+
 
 
 ModuleGet modget;
@@ -41,51 +41,63 @@ int Misc::playercheck(int playercheck)
 float Misc::velocity()
 {
 	vec3 playerVel = *(vec3*)(localPlayer + 0x110); // 0x110 is = velocity.
-	flSpeed = sqrt(pow(playerVel.y, 2) + pow(playerVel.z, 2)) + 0.00009;
+	flSpeed = static_cast<float>(sqrt(pow(playerVel.y, 2) + pow(playerVel.z, 2)) + 0.00009);
 	return flSpeed;
 }
 
 void Misc::noflash(float flash)
 {
-		*(float*)(localPlayer + m_flFlashMaxAlpha) = (flash * 2.55);
+		*(float*)(localPlayer + m_flFlashMaxAlpha) = (flash * static_cast<float>(2.55));
 }
 
-void Misc::Glow(bool glow, float r1, float g1, float b1, float a1, float r2, float g2, float b2, float a2, bool radarHax) // optimise this.
+
+void Misc::radar(bool radarHax, DWORD currentEntity)
 {
-	int localTeam = *(int*)(modget.getLocalPlayer() + m_iTeamNum);
+	if (radarHax)
+	{
+		*(int*)(currentEntity + m_bSpotted) = 1;
+	}
+}
+
+void Misc::Glow(bool glow, AquilaColor EnemyGlow, AquilaColor TeamGlow, DWORD currentEntity) // optimise this. // make a entity class for this
+{
+	if (glow)
+	{
+
+		int glowindex = *(int*)(currentEntity + m_iGlowIndex);
+		int entityTeam = *(int*)(currentEntity + m_iTeamNum);
+
+		if (entityTeam == modget.GetLocalTeam())
+		{
+			//Local Team // change to struct
+			*(float*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0x4)) = TeamGlow.r; //r
+			*(float*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0x8)) = TeamGlow.g; //g
+			*(float*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0xC)) = TeamGlow.b; //b
+			*(float*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0x10)) = TeamGlow.a; //a
+		}
+		else
+		{
+			//Enemy Team // change to struct
+			*(float*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0x4)) = EnemyGlow.r; //r
+			*(float*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0x8)) = EnemyGlow.g; //g
+			*(float*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0xC)) = EnemyGlow.b; //b
+			*(float*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0x10)) = EnemyGlow.a; //a
+		}
+		*(bool*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0x24)) = true;
+		*(bool*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0x25)) = false;
+	}
+}
+
+
+void Misc::EntityCheckHacks(bool radarHax, bool glow, AquilaColor EnemyGlow, AquilaColor TeamGlow)
+{
 	for (int i = 1; i < 32; i++)
 	{
 		currentEntity = *(DWORD*)(CLIENT_DLL + dwEntityList + (i * 0x10));
 		if (currentEntity == 0) continue;
-		if (radarHax)
-		{
-			*(int*)(currentEntity + m_bSpotted) = 1;
-		}
-		if (glow)
-		{
 
-			int glowindex = *(int*)(currentEntity + m_iGlowIndex);
-			int entityTeam = *(int*)(currentEntity + m_iTeamNum);
-
-			if (entityTeam == localTeam)
-			{
-				//Local Team // change to struct
-				*(float*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0x4)) = r1; //r
-				*(float*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0x8)) = g1; //g
-				*(float*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0xC)) = b1; //b
-				*(float*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0x10)) = a1; //a
-			}
-			else
-			{
-				//Enemy Team // change to struct
-				*(float*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0x4)) = r2; //r
-				*(float*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0x8)) = g2; //g
-				*(float*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0xC)) = b2; //b
-				*(float*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0x10)) = a2; //a
-			}
-			*(bool*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0x24)) = true;
-			*(bool*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0x25)) = false;
-		}
+		//things
+		radar(radarHax, currentEntity);
+		Glow(glow, EnemyGlow, TeamGlow, currentEntity);
 	}
 }
-

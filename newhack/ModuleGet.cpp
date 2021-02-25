@@ -2,6 +2,7 @@
 #include "OffSets.h"
 #include <Windows.h>
 
+
 DWORD ModuleGet::getCLIENT_DLL()
 {
 	return (DWORD)GetModuleHandle("client.dll");
@@ -24,4 +25,9 @@ DWORD ModuleGet::getGlowObjectManager()
 DWORD ModuleGet::getEntityList()
 {
 	return *(DWORD*)(getCLIENT_DLL() + dwEntityList);
+}
+
+int ModuleGet::GetLocalTeam()
+{
+	return *(int*)(getLocalPlayer() + m_iTeamNum);
 }

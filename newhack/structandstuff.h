@@ -1,4 +1,6 @@
-#include "includes.h"
+#include <iostream>
+#include <Windows.h>
+
 
 struct vec2
 {
@@ -15,7 +17,13 @@ struct vec4
 	float x, y, z, w;
 };
 
-enum class Entity_flags : unsigned int {
+struct AquilaColor
+{
+	float a, r, g, b;
+	// alpha, red, green, blue.
+};
+
+enum class Entity_flagsCS : unsigned int {
 	on_ground = (1 << 0),
 	ducking = (1 << 1),
 	water_jump = (1 << 2),
@@ -26,7 +34,7 @@ enum class Entity_flags : unsigned int {
 	client = (1 << 7),
 	fake_client = (1 << 8),
 	in_water = (1 << 9)
-}entflags;
+};
 
 struct SGlowStructEnemy
 {
@@ -40,7 +48,7 @@ struct SGlowStructEnemy
 	BYTE renderOccluded = true;
 	BYTE renderUnocclude = false;
 	BYTE fullBloom = false;
-}glowEnemyStrc;
+};
 
 struct SGlowStructLocal
 {
@@ -54,4 +62,4 @@ struct SGlowStructLocal
 	BYTE renderOccluded = true;
 	BYTE renderUnocclude = false;
 	BYTE fullBloom = false;
-}glowLocalStrc;
+};

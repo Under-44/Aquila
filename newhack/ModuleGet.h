@@ -1,5 +1,6 @@
 #pragma once
 #include <Windows.h>
+
 class ModuleGet
 {
 public:
@@ -8,5 +9,6 @@ public:
 	int getplayerHealth();
 	DWORD getEntityList();
 	DWORD getGlowObjectManager();
+	int GetLocalTeam();
 };
 
