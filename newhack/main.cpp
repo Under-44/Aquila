@@ -50,12 +50,16 @@ bool radarHax = false;
 bool bhop = false;
 bool nothing = false;
 bool glow = false;
+bool fullBloomlocal = false;
+bool fullBloomenemy = false;
+
 
 
 int playercheck = 0;
 int healthv = 0;
 int bhop_timing = 0;  //	DO THIS :D
 int window_no_move = 4;
+int player_dormant;
 
 float flspeed;
 float flash = 100;
@@ -168,11 +172,13 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 			std::string healthS = std::to_string(healthv);
 			std::string FrameS = std::to_string(ImGui::GetIO().Framerate);
 			std::string flspeedS = std::to_string(flspeed);
+			std::string playerdormantS = std::to_string(player_dormant);
 			FrameS.erase(6, 9);
 			flspeedS.erase(6, 9);
 			ImGui::Text(playercheckS.c_str()); ImGui::SameLine(); ImGui::Text(" | localPlayer");
 			ImGui::Text(healthS.c_str()); ImGui::SameLine(); ImGui::Text(" | Health");
 			ImGui::Text(flspeedS.c_str()); ImGui::SameLine(); ImGui::Text(" | Velocity");
+			ImGui::Text(playerdormantS.c_str()); ImGui::SameLine(); ImGui::Text(" | playerdormant");
 			ImGui::Separator();
 			ImGui::Text(FrameS.c_str()); ImGui::SameLine(); ImGui::Text("UI.FPS");
 			ImGui::Separator();
@@ -195,11 +201,11 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 				| ImGuiWindowFlags_NoCollapse
 				| ImGuiWindowFlags_NoTitleBar
 				| ImGuiWindowFlags_NoMove);
-			ImGui::SetWindowSize(ImVec2(400, 260));
+			ImGui::SetWindowSize(ImVec2(400, 392));
 			ImGui::SetWindowPos(ImVec2(MAINWINDOW_POS.x + 402, MAINWINDOW_POS.y));
-
 			ImGui::TextColored(ImVec4(25, 194, 98, 255), "Team");
-
+			ImGui::Separator();
+			ImGui::Checkbox("FullBloom###localfullbloom", &fullBloomlocal);
 			ImGui::Separator();
 			//teamglow
 			ImGui::SliderFloat("RED###red1", &TeamGlow.r, 0.f, 1.f);
@@ -210,7 +216,8 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 			ImGui::Separator();
 
 			ImGui::TextColored(ImVec4(217, 72, 20, 255), "Enemy");
-
+			ImGui::Separator();
+			ImGui::Checkbox("FullBloom###enemyfullbloom", &fullBloomenemy);
 			ImGui::Separator();
 			//enemyglow
 			ImGui::SliderFloat("RED###red2", &EnemyGlow.r, 0.f, 1.f);
@@ -295,7 +302,7 @@ DWORD WINAPI heavyThread(LPVOID lpReserved, HMODULE hMod)
 		{
 			misc.bhop(bhop);
 			misc.noflash(flash);
-			misc.Glow(glow, EnemyGlow, TeamGlow);
+			misc.Glow(glow, EnemyGlow, TeamGlow, fullBloomlocal, fullBloomenemy);
 			if (playercheck == 0) { break; }
 			
 		}
@@ -317,6 +324,7 @@ DWORD WINAPI lightThread(LPVOID lpReserved, HMODULE hMod)
 			misc.radar(radarHax);
 			healthv = modget1.getplayerHealth();
 			flspeed = misc.velocity();
+			player_dormant = modget1.getplayerdormant();
 			if (playercheck == 0) { break; }
 			Sleep(50);
 		}

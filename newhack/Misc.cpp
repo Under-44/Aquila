@@ -13,14 +13,15 @@ ModuleGet modget;
 DWORD currentEntity;
 float flSpeed;
 bool once = true;
-
+SGlowStructEnemy glowenemy;
+SGlowStructLocal glowlocal;
 
 Misc::Misc()
 {
 	//init
 }
 
-void Misc::bhop(bool bhop)
+void Misc::bhop(bool bhop) // create new bhop thing also make a crouch bhop.
 {
 		if (bhop && GetAsyncKeyState(VK_SPACE) && 0x8000)
 		{
@@ -64,7 +65,7 @@ void Misc::radar(bool radarHax)
 	}
 }
 
-void Misc::Glow(bool glow, AquilaColor EnemyGlow, AquilaColor TeamGlow) // optimise this. // make a entity class for this
+void Misc::Glow(bool glow, AquilaColor EnemyGlow, AquilaColor TeamGlow, bool fullbloomlocal, bool fullbloomenemy) // optimise this. // make a entity class for this
 {
 	if (glow)
 	{
@@ -73,25 +74,31 @@ void Misc::Glow(bool glow, AquilaColor EnemyGlow, AquilaColor TeamGlow) // optim
 			DWORD currentEntity = EntityPlayerListCheck(i);
 
 			if (currentEntity == 0) continue;
+			if (modget.getCurrentEntityHealth(currentEntity) < 1 ||
+				modget.getCurrentEntityHealth(currentEntity) > 100) continue;
 
 			int glowindex = *(int*)(currentEntity + m_iGlowIndex);
 			int entityTeam = *(int*)(currentEntity + m_iTeamNum);
 
-			if (entityTeam == modget.GetLocalTeam())
+			if (entityTeam == modget.getLocalTeam())
 			{
 				//Local Team // change to struct
-				*(float*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0x4)) = TeamGlow.r; //r
-				*(float*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0x8)) = TeamGlow.g; //g
-				*(float*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0xC)) = TeamGlow.b; //b
-				*(float*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0x10)) = TeamGlow.a; //a
+				glowlocal.fullBloom = fullbloomlocal;
+				glowlocal.red = TeamGlow.r;
+				glowlocal.green = TeamGlow.g;
+				glowlocal.blue = TeamGlow.b;
+				glowlocal.alpha = TeamGlow.a;
+				*(SGlowStructLocal*)(modget.getGlowObjectManager() + (glowindex * 0x38) + 0x4) = glowlocal;
 			}
-			else
+			else if(entityTeam != modget.getLocalTeam())
 			{
 				//Enemy Team // change to struct
-				*(float*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0x4)) = EnemyGlow.r; //r
-				*(float*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0x8)) = EnemyGlow.g; //g
-				*(float*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0xC)) = EnemyGlow.b; //b
-				*(float*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0x10)) = EnemyGlow.a; //a
+				glowenemy.fullBloom = fullbloomenemy;
+				glowenemy.red = EnemyGlow.r;
+				glowenemy.green = EnemyGlow.g;
+				glowenemy.blue = EnemyGlow.b;
+				glowenemy.alpha = EnemyGlow.a;
+				*(SGlowStructEnemy*)(modget.getGlowObjectManager() + (glowindex * 0x38) + 0x4) = glowenemy;
 			}
 			*(bool*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0x24)) = true;
 			*(bool*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0x25)) = false;
@@ -103,3 +110,4 @@ DWORD Misc::EntityPlayerListCheck(int i)
 {
 	return *(DWORD*)(CLIENT_DLL + dwEntityList + (i * 0x10));
 }
+

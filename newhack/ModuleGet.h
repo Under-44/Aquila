@@ -9,6 +9,9 @@ public:
 	int getplayerHealth();
 	DWORD getEntityList();
 	DWORD getGlowObjectManager();
-	int GetLocalTeam();
+	int getLocalTeam();
+	int getCurrentEntityHealth(DWORD currentEntity);
+	int getCurrentEntityDormant(DWORD currentEntity);
+	int getplayerdormant();
 };
 

@@ -38,10 +38,10 @@ enum class Entity_flagsCS : unsigned int {
 
 struct SGlowStructEnemy
 {
-	float red = 0.f;
+	float red = 1.f;
 	float green = 0.f;
 	float blue = 0.f;
-	float alpha = 0.f;
+	float alpha = 1.f;
 	char padding1[8];
 	float IDK = 1.f;
 	char padding2[4];
@@ -53,9 +53,9 @@ struct SGlowStructEnemy
 struct SGlowStructLocal
 {
 	float red = 0.f;
-	float green = 0.f;
+	float green = 1.f;
 	float blue = 0.f;
-	float alpha = 0.f;
+	float alpha = 1.f;
 	char padding1[8];
 	float IDK = 1.f;
 	char padding2[4];
