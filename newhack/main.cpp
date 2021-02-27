@@ -41,6 +41,12 @@ void InitImGui(LPDIRECT3DDEVICE9 pDevice)
 	style->GrabMinSize = 15;
 	style->WindowBorderSize = 0;
 	style->GrabRounding = 4;
+	AllocConsole();
+	FILE* fDummy;
+	freopen_s(&fDummy, "CONIN$", "r", stdin);
+	freopen_s(&fDummy, "CONOUT$", "w", stderr);
+	freopen_s(&fDummy, "CONOUT$", "w", stdout);
+	printf("Debugging Window:\n");
 }
 bool isopen = true;
 bool init = false;
@@ -54,6 +60,7 @@ bool fullBloomlocal = false;
 bool fullBloomenemy = false;
 bool velocityglow_enemy = false;
 bool velocityglow_local = false;
+bool hoverglow = false;
 
 
 int playercheck = 0;
@@ -202,8 +209,12 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 				| ImGuiWindowFlags_NoCollapse
 				| ImGuiWindowFlags_NoTitleBar
 				| ImGuiWindowFlags_NoMove);
-			ImGui::SetWindowSize(ImVec2(400, 690));
+			ImGui::SetWindowSize(ImVec2(400, 750));
 			ImGui::SetWindowPos(ImVec2(MAINWINDOW_POS.x + 402, MAINWINDOW_POS.y));
+			ImGui::Text("ALL");
+			ImGui::Separator();
+			ImGui::Checkbox("HoverGlow", &hoverglow);
+			ImGui::Separator();
 			ImGui::TextColored(ImVec4(25, 194, 98, 255), "Team");
 			ImGui::Separator();
 			ImGui::Checkbox("FullBloom###localfullbloom", &fullBloomlocal);
@@ -304,7 +315,7 @@ DWORD WINAPI heavyThread(LPVOID lpReserved, HMODULE hMod)
 		{
 			misc.bhop(bhop);
 			misc.noflash(flash);
-			misc.Glow(glow, EnemyGlow, TeamGlow, fullBloomlocal, fullBloomenemy, velocityglow_local, velocityglow_enemy);
+			misc.Glow(glow, EnemyGlow, TeamGlow, fullBloomlocal, fullBloomenemy, velocityglow_local, velocityglow_enemy, hoverglow);
 			if (playercheck == 0) { break; }
 			
 		}

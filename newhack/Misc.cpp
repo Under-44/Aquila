@@ -64,13 +64,21 @@ void Misc::radar(bool radarHax)
 	}
 }
 
-void Misc::Glow(bool glow, AquilaColor EnemyGlow, AquilaColor TeamGlow, bool fullbloomlocal, bool fullbloomenemy, bool velocityglow_local, bool velocityglow_enemy) // optimise this. // make a entity class for this
+void Misc::Glow(bool glow, AquilaColor EnemyGlow, AquilaColor TeamGlow, bool fullbloomlocal, bool fullbloomenemy, bool velocityglow_local, bool velocityglow_enemy, bool hoverglow) // optimise this. // make a entity class for this
 {
 	if (glow)
 	{
 		for (int i = 0; i < 32; i++)
 		{
-			DWORD currentEntity = EntityPlayerListCheck(i);
+			DWORD currentEntity;
+			if (hoverglow)
+			{
+			currentEntity = EntityPlayerListCheck(modget.getCH() - 1);
+			}
+			else
+			{
+				currentEntity = EntityPlayerListCheck(i);
+			}
 
 			if (currentEntity == 0) continue;
 			if (modget.getCurrentEntityHealth(currentEntity) < 1 ||
@@ -115,6 +123,8 @@ void Misc::Glow(bool glow, AquilaColor EnemyGlow, AquilaColor TeamGlow, bool ful
 		}
 	}
 }
+
+
 
 DWORD Misc::EntityPlayerListCheck(int i)
 {

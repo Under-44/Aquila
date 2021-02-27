@@ -46,3 +46,8 @@ int ModuleGet::getplayerdormant()
 {
 	return *(int*)(getLocalPlayer() + m_bDormant);
 }
+
+int ModuleGet::getCH()
+{
+	return *(int*)(getLocalPlayer() + m_iCrosshairId);
+}

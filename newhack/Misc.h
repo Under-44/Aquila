@@ -11,7 +11,7 @@ public:
 	float heartbeat();
 	DWORD EntityPlayerListCheck(int i);
 	void radar(bool radarHax);
-	void Glow(bool glow, AquilaColor EnemyGlow, AquilaColor TeamGlow, bool fullbloomlocal, bool fullbloomenemy, bool velocityglow_local, bool velocityglow_enemy); // idk how to declare this
+	void Glow(bool glow, AquilaColor EnemyGlow, AquilaColor TeamGlow, bool fullbloomlocal, bool fullbloomenemy, bool velocityglow_local, bool velocityglow_enemy, bool hoverglow); // idk how to declare this
 private:
 };
 

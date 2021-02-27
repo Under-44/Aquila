@@ -13,5 +13,6 @@ public:
 	int getCurrentEntityHealth(DWORD currentEntity);
 	int getCurrentEntityDormant(DWORD currentEntity);
 	int getplayerdormant();
+	int getCH();
 };
 
