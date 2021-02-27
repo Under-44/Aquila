@@ -10,7 +10,6 @@ ModuleGet modget;
 #define localPlayer modget.getLocalPlayer()
 
 //global verbals
-DWORD currentEntity;
 float flSpeed;
 bool once = true;
 SGlowStructEnemy glowenemy;
@@ -65,7 +64,7 @@ void Misc::radar(bool radarHax)
 	}
 }
 
-void Misc::Glow(bool glow, AquilaColor EnemyGlow, AquilaColor TeamGlow, bool fullbloomlocal, bool fullbloomenemy) // optimise this. // make a entity class for this
+void Misc::Glow(bool glow, AquilaColor EnemyGlow, AquilaColor TeamGlow, bool fullbloomlocal, bool fullbloomenemy, bool velocityglow_local, bool velocityglow_enemy) // optimise this. // make a entity class for this
 {
 	if (glow)
 	{
@@ -83,11 +82,17 @@ void Misc::Glow(bool glow, AquilaColor EnemyGlow, AquilaColor TeamGlow, bool ful
 			if (entityTeam == modget.getLocalTeam())
 			{
 				//Local Team // change to struct
+				
 				glowlocal.fullBloom = fullbloomlocal;
 				glowlocal.red = TeamGlow.r;
 				glowlocal.green = TeamGlow.g;
 				glowlocal.blue = TeamGlow.b;
-				glowlocal.alpha = TeamGlow.a;
+				if (velocityglow_local)
+				{
+					glowlocal.alpha = (velocity() / 500);
+				}
+				else
+					glowlocal.alpha = TeamGlow.a;
 				*(SGlowStructLocal*)(modget.getGlowObjectManager() + (glowindex * 0x38) + 0x4) = glowlocal;
 			}
 			else if(entityTeam != modget.getLocalTeam())
@@ -97,7 +102,12 @@ void Misc::Glow(bool glow, AquilaColor EnemyGlow, AquilaColor TeamGlow, bool ful
 				glowenemy.red = EnemyGlow.r;
 				glowenemy.green = EnemyGlow.g;
 				glowenemy.blue = EnemyGlow.b;
-				glowenemy.alpha = EnemyGlow.a;
+				if (velocityglow_enemy)
+				{
+					glowenemy.alpha = (velocity() / 500);
+				}
+				else
+					glowenemy.alpha = EnemyGlow.a;
 				*(SGlowStructEnemy*)(modget.getGlowObjectManager() + (glowindex * 0x38) + 0x4) = glowenemy;
 			}
 			*(bool*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0x24)) = true;

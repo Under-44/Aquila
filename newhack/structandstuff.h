@@ -43,8 +43,8 @@ struct SGlowStructEnemy
 	float blue = 0.f;
 	float alpha = 1.f;
 	char padding1[8];
-	float IDK = 1.f;
-	char padding2[4];
+	float alphakindathing = 1.f;
+	float POINTERTHING = 0;
 	BYTE renderOccluded = true;
 	BYTE renderUnocclude = false;
 	BYTE fullBloom = false;
@@ -57,8 +57,8 @@ struct SGlowStructLocal
 	float blue = 0.f;
 	float alpha = 1.f;
 	char padding1[8];
-	float IDK = 1.f;
-	char padding2[4];
+	float alphakindathing = 1.f;
+	float POINTERTHING = 0;
 	BYTE renderOccluded = true;
 	BYTE renderUnocclude = false;
 	BYTE fullBloom = false;

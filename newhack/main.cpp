@@ -52,7 +52,8 @@ bool nothing = false;
 bool glow = false;
 bool fullBloomlocal = false;
 bool fullBloomenemy = false;
-
+bool velocityglow_enemy = false;
+bool velocityglow_local = false;
 
 
 int playercheck = 0;
@@ -206,6 +207,7 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 			ImGui::TextColored(ImVec4(25, 194, 98, 255), "Team");
 			ImGui::Separator();
 			ImGui::Checkbox("FullBloom###localfullbloom", &fullBloomlocal);
+			ImGui::Checkbox("VelocityGlow###localvelocityglow", &velocityglow_local);
 			ImGui::Separator();
 			//teamglow
 			ImGui::SliderFloat("RED###red1", &TeamGlow.r, 0.f, 1.f);
@@ -218,6 +220,7 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 			ImGui::TextColored(ImVec4(217, 72, 20, 255), "Enemy");
 			ImGui::Separator();
 			ImGui::Checkbox("FullBloom###enemyfullbloom", &fullBloomenemy);
+			ImGui::Checkbox("VelocityGlow###enemyvelocityglow", &velocityglow_enemy);
 			ImGui::Separator();
 			//enemyglow
 			ImGui::SliderFloat("RED###red2", &EnemyGlow.r, 0.f, 1.f);
@@ -302,7 +305,7 @@ DWORD WINAPI heavyThread(LPVOID lpReserved, HMODULE hMod)
 		{
 			misc.bhop(bhop);
 			misc.noflash(flash);
-			misc.Glow(glow, EnemyGlow, TeamGlow, fullBloomlocal, fullBloomenemy);
+			misc.Glow(glow, EnemyGlow, TeamGlow, fullBloomlocal, fullBloomenemy, velocityglow_local, velocityglow_enemy);
 			if (playercheck == 0) { break; }
 			
 		}
