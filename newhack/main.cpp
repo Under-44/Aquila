@@ -67,8 +67,8 @@ float flash = 100;
 float flash255;
 
 
-AquilaColor TeamGlow = { 1.f, 0.f, 1.f, 0.f };  // alpha, red, green, blue
-AquilaColor EnemyGlow = { 1.f, 1.f, 0.f, 0.f }; // alpha, red, green, blue
+AquilaColor TeamGlow = { 0.f, 1.f, 0.f, 100.f };  // red, green, blue, alpha
+AquilaColor EnemyGlow = { 1.f, 0.f, 0.f, 100.f }; // red, green, blue, alpha
 
 
 int windowHeight, windowWidth;
@@ -202,7 +202,7 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 				| ImGuiWindowFlags_NoCollapse
 				| ImGuiWindowFlags_NoTitleBar
 				| ImGuiWindowFlags_NoMove);
-			ImGui::SetWindowSize(ImVec2(400, 392));
+			ImGui::SetWindowSize(ImVec2(400, 690));
 			ImGui::SetWindowPos(ImVec2(MAINWINDOW_POS.x + 402, MAINWINDOW_POS.y));
 			ImGui::TextColored(ImVec4(25, 194, 98, 255), "Team");
 			ImGui::Separator();
@@ -210,11 +210,10 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 			ImGui::Checkbox("VelocityGlow###localvelocityglow", &velocityglow_local);
 			ImGui::Separator();
 			//teamglow
-			ImGui::SliderFloat("RED###red1", &TeamGlow.r, 0.f, 1.f);
-			ImGui::SliderFloat("BLUE###blue1", &TeamGlow.b, 0.f, 1.f);
-			ImGui::SliderFloat("GREEN###green1", &TeamGlow.g, 0.f, 1.f);
-			ImGui::SliderFloat("ALPHA###alpha1", &TeamGlow.a, 0.f, 1.f);
-
+			ImGui::ColorPicker3("TeamGlowPicker", (float*)&TeamGlow, ImGuiColorEditFlags_NoOptions | ImGuiColorEditFlags_NoTooltip
+			 | ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_NoDragDrop | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoSidePreview
+			 | ImGuiColorEditFlags_DisplayRGB);
+			ImGui::SliderFloat("ALPHA###alpha1", &TeamGlow.a, 0.f, 100.f);
 			ImGui::Separator();
 
 			ImGui::TextColored(ImVec4(217, 72, 20, 255), "Enemy");
@@ -223,10 +222,10 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 			ImGui::Checkbox("VelocityGlow###enemyvelocityglow", &velocityglow_enemy);
 			ImGui::Separator();
 			//enemyglow
-			ImGui::SliderFloat("RED###red2", &EnemyGlow.r, 0.f, 1.f);
-			ImGui::SliderFloat("BLUE###blue2", &EnemyGlow.b, 0.f, 1.f);
-			ImGui::SliderFloat("GREEN###green2", &EnemyGlow.g, 0.f, 1.f);
-			ImGui::SliderFloat("ALPHA###alpha2", &EnemyGlow.a, 0.f, 1.f);
+			ImGui::ColorPicker3("EnemyGlowPicker", (float*)&EnemyGlow, ImGuiColorEditFlags_NoOptions | ImGuiColorEditFlags_NoTooltip
+				| ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_NoDragDrop | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoSidePreview
+				| ImGuiColorEditFlags_DisplayRGB);
+			ImGui::SliderFloat("ALPHA###alpha2", &EnemyGlow.a, 0.f, 100.f);
 		ImGui::End();
 		}
 

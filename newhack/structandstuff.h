@@ -19,7 +19,7 @@ struct vec4
 
 struct AquilaColor
 {
-	float a, r, g, b;
+	float r, g, b, a;
 	// alpha, red, green, blue.
 };
 
