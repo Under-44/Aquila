@@ -64,21 +64,13 @@ void Misc::radar(bool radarHax)
 	}
 }
 
-void Misc::Glow(bool glow, AquilaColor EnemyGlow, AquilaColor TeamGlow, bool fullbloomlocal, bool fullbloomenemy, bool velocityglow_local, bool velocityglow_enemy, bool hoverglow) // optimise this. // make a entity class for this
+void Misc::Glow(bool glow, AquilaColor EnemyGlow, AquilaColor TeamGlow, bool fullbloomlocal, bool fullbloomenemy, bool velocityglow_local, bool velocityglow_enemy) // optimise this. // make a entity class for this
 {
 	if (glow)
 	{
 		for (int i = 0; i < 32; i++)
 		{
-			DWORD currentEntity;
-			if (hoverglow)
-			{
-			currentEntity = EntityPlayerListCheck(modget.getCH() - 1);
-			}
-			else
-			{
-				currentEntity = EntityPlayerListCheck(i);
-			}
+			DWORD currentEntity = EntityPlayerListCheck(i);
 
 			if (currentEntity == 0) continue;
 			if (modget.getCurrentEntityHealth(currentEntity) < 1 ||
@@ -86,7 +78,7 @@ void Misc::Glow(bool glow, AquilaColor EnemyGlow, AquilaColor TeamGlow, bool ful
 
 			//
 			vec3 playerVel = *(vec3*)(EntityPlayerListCheck(i) + 0x110); // 0x110 is = velocity.
-			float eplSpeed = static_cast<float>(sqrt(pow(playerVel.y, 2) + pow(playerVel.z, 2)) + 0.00009);
+			float eplSpeed = static_cast<float>(sqrt(pow(playerVel.y, 2) + pow(playerVel.z, 2)) + 10 /*this is for glow when standing still*/ );
 			//
 			int glowindex = *(int*)(currentEntity + m_iGlowIndex);
 			int entityTeam = *(int*)(currentEntity + m_iTeamNum);
