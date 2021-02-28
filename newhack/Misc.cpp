@@ -84,6 +84,10 @@ void Misc::Glow(bool glow, AquilaColor EnemyGlow, AquilaColor TeamGlow, bool ful
 			if (modget.getCurrentEntityHealth(currentEntity) < 1 ||
 				modget.getCurrentEntityHealth(currentEntity) > 100) continue;
 
+			//
+			vec3 playerVel = *(vec3*)(EntityPlayerListCheck(i) + 0x110); // 0x110 is = velocity.
+			float eplSpeed = static_cast<float>(sqrt(pow(playerVel.y, 2) + pow(playerVel.z, 2)) + 0.00009);
+			//
 			int glowindex = *(int*)(currentEntity + m_iGlowIndex);
 			int entityTeam = *(int*)(currentEntity + m_iTeamNum);
 
@@ -97,7 +101,7 @@ void Misc::Glow(bool glow, AquilaColor EnemyGlow, AquilaColor TeamGlow, bool ful
 				glowlocal.blue = TeamGlow.b;
 				if (velocityglow_local)
 				{
-					glowlocal.alpha = (velocity() / 500);
+					glowlocal.alpha = (eplSpeed / 500); // make the value a slider or use the alpha and just times it
 				}
 				else
 					glowlocal.alpha = TeamGlow.a / static_cast<float>(95.2);
@@ -112,7 +116,7 @@ void Misc::Glow(bool glow, AquilaColor EnemyGlow, AquilaColor TeamGlow, bool ful
 				glowenemy.blue = EnemyGlow.b;
 				if (velocityglow_enemy)
 				{
-					glowenemy.alpha = (velocity() / 500);
+					glowenemy.alpha = (eplSpeed / 500); // make the value a slider or use the alpha and just times it
 				}
 				else
 					glowenemy.alpha = EnemyGlow.a / static_cast<float>(95.2);
