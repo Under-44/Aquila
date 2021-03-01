@@ -78,15 +78,14 @@ void Misc::Glow(bool glow, AquilaColor EnemyGlow, AquilaColor TeamGlow, bool ful
 
 			//
 			vec3 playerVel = *(vec3*)(EntityPlayerListCheck(i) + 0x110); // 0x110 is = velocity.
-			float eplSpeed = static_cast<float>(sqrt(pow(playerVel.y, 2) + pow(playerVel.z, 2)) + 10 /*this is for glow when standing still*/ );
+			float eplSpeed = static_cast<float>(sqrt(pow(playerVel.y, 2) + pow(playerVel.z, 2)) + 0 /*this is for glow when standing still*/ );
 			//
 			int glowindex = *(int*)(currentEntity + m_iGlowIndex);
 			int entityTeam = *(int*)(currentEntity + m_iTeamNum);
 
 			if (entityTeam == modget.getLocalTeam())
 			{
-				//Local Team // change to struct
-				
+				//Local Team
 				glowlocal.fullBloom = fullbloomlocal;
 				glowlocal.red = TeamGlow.r;
 				glowlocal.green = TeamGlow.g;
@@ -101,7 +100,7 @@ void Misc::Glow(bool glow, AquilaColor EnemyGlow, AquilaColor TeamGlow, bool ful
 			}
 			else if(entityTeam != modget.getLocalTeam())
 			{
-				//Enemy Team // change to struct
+				//Enemy Team
 				glowenemy.fullBloom = fullbloomenemy;
 				glowenemy.red = EnemyGlow.r;
 				glowenemy.green = EnemyGlow.g;
@@ -120,7 +119,9 @@ void Misc::Glow(bool glow, AquilaColor EnemyGlow, AquilaColor TeamGlow, bool ful
 	}
 }
 
+// ..Create trigger bot
 
+// ..Create a player resourse thing to get all the players names. and store it somehow
 
 DWORD Misc::EntityPlayerListCheck(int i)
 {
