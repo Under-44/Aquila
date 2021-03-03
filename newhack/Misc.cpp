@@ -54,6 +54,10 @@ void Misc::noflash(float flash)
 
 void Misc::radar(bool radarHax)
 {
+
+	std::cout << modget.getCH();
+	system("CLS");
+
 	if (radarHax)
 	{
 		for (int i = 0; i < 32; i++)
@@ -123,11 +127,15 @@ void Misc::Glow(bool glow, AquilaColor EnemyGlow, AquilaColor TeamGlow, bool ful
 // ..Create trigger bot
 
 // ..Create a player resourse thing to get all the players names. and store it somehow
+// then i could add on more to this feature, example is flowhooks player list.
+// ??idea on how to do it is create a function the requires a index number, then return the struct with the data, then show that info
+// depending on what wiget you're focused on at that time.
 
 void Misc::PlayerDeathSound()
 {
 	if (modget.getplayerHealth() == 0 && soundbool == true)
 	{
+		//i have to find a way to put the wav file into the dll.
 		// have to put the sound into the csgo file then call it from the ingame console.
 		soundbool = false;
 	}
