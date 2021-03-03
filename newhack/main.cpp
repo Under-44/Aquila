@@ -41,12 +41,12 @@ void InitImGui(LPDIRECT3DDEVICE9 pDevice)
 	style->GrabMinSize = 15;
 	style->WindowBorderSize = 0;
 	style->GrabRounding = 4;
-/*	AllocConsole();
+	AllocConsole();
 	FILE* fDummy;
 	freopen_s(&fDummy, "CONIN$", "r", stdin);
 	freopen_s(&fDummy, "CONOUT$", "w", stderr);
 	freopen_s(&fDummy, "CONOUT$", "w", stdout);
-	printf("Debugging Window:\n");*/ // this is a debug console
+	printf("Debugging Window:\n"); // this is a debug console
 }
 bool isopen = true;
 bool init = false;

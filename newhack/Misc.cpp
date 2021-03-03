@@ -12,6 +12,7 @@ ModuleGet modget;
 //global verbals
 float flSpeed;
 bool once = true;
+bool soundbool = true;
 SGlowStructEnemy glowenemy;
 SGlowStructLocal glowlocal;
 
@@ -92,7 +93,7 @@ void Misc::Glow(bool glow, AquilaColor EnemyGlow, AquilaColor TeamGlow, bool ful
 				glowlocal.blue = TeamGlow.b;
 				if (velocityglow_local)
 				{
-					glowlocal.alpha = (eplSpeed / 500); // make the value a slider or use the alpha and just times it
+					glowlocal.alpha = (eplSpeed / 500); // make the value a slider or use the alpha and just times it // do this
 				}
 				else
 					glowlocal.alpha = TeamGlow.a / static_cast<float>(95.2);
@@ -107,7 +108,7 @@ void Misc::Glow(bool glow, AquilaColor EnemyGlow, AquilaColor TeamGlow, bool ful
 				glowenemy.blue = EnemyGlow.b;
 				if (velocityglow_enemy)
 				{
-					glowenemy.alpha = (eplSpeed / 500); // make the value a slider or use the alpha and just times it
+					glowenemy.alpha = (eplSpeed / 500); // make the value a slider or use the alpha and just times it // do this
 				}
 				else
 					glowenemy.alpha = EnemyGlow.a / static_cast<float>(95.2);
@@ -122,6 +123,22 @@ void Misc::Glow(bool glow, AquilaColor EnemyGlow, AquilaColor TeamGlow, bool ful
 // ..Create trigger bot
 
 // ..Create a player resourse thing to get all the players names. and store it somehow
+
+void Misc::PlayerDeathSound()
+{
+	if (modget.getplayerHealth() == 0 && soundbool == true)
+	{
+		// have to put the sound into the csgo file then call it from the ingame console.
+		soundbool = false;
+	}
+	else
+	{
+		if (modget.getplayerHealth() > 0 && soundbool == false)
+		{
+			soundbool = true;
+		}
+	}
+}
 
 DWORD Misc::EntityPlayerListCheck(int i)
 {
