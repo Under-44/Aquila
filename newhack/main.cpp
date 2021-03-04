@@ -63,7 +63,7 @@ bool velocityglow_local = false;
 
 
 
-int playercheck = 0;
+DWORD playercheck;
 int healthv = 0;
 int bhop_timing = 0;  //	DO THIS :D
 int window_no_move = 4;
@@ -303,7 +303,7 @@ DWORD WINAPI heavyThread(LPVOID lpReserved, HMODULE hMod)
 	while (join)
 	{
 		// no sleep
-		while (playercheck == 0)
+		while (!playercheck)
 		{
 			Sleep(500); // buffer
 		}
@@ -312,7 +312,7 @@ DWORD WINAPI heavyThread(LPVOID lpReserved, HMODULE hMod)
 			misc.bhop(bhop);
 			misc.noflash(flash);
 			misc.Glow(glow, EnemyGlow, TeamGlow, fullBloomlocal, fullBloomenemy, velocityglow_local, velocityglow_enemy);
-			if (playercheck == 0) { break; }
+			if (!playercheck) { break; }
 			
 		}
 	}
@@ -324,7 +324,7 @@ DWORD WINAPI lightThread(LPVOID lpReserved, HMODULE hMod)
 {
 	while (join) {
 		// sleep with 50
-		while (playercheck == 0)
+		while (!playercheck)
 		{
 			Sleep(500); // buffer
 		}
@@ -334,7 +334,7 @@ DWORD WINAPI lightThread(LPVOID lpReserved, HMODULE hMod)
 			healthv = modget1.getplayerHealth();
 			flspeed = misc.velocity();
 			player_dormant = modget1.getplayerdormant();
-			if (playercheck == 0) { break; }
+			if (!playercheck) { break; }
 			Sleep(50);
 		}
 	}
@@ -347,7 +347,7 @@ DWORD WINAPI playercheckThread(LPVOID lpReserved, HMODULE hMod)
 {
 	while (join)
 	{
-		playercheck = misc.playercheck(playercheck); // bug here // idk if this is fixed now? but ill leave this here just incase.
+		playercheck = modget1.getLocalPlayer(); // !!fixed, was writing to a int, FellsDonkMan Clap :D
 		Sleep(50);
 	}
 	FreeLibraryAndExitThread(hMod, 0);

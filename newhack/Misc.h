@@ -5,7 +5,6 @@ class Misc
 public:
 	Misc();
 	void bhop(bool bhop);
-	int playercheck(int playercheck);
 	float velocity();
 	void noflash(float flash);
 	float heartbeat();

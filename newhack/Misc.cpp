@@ -28,11 +28,11 @@ void Misc::bhop(bool bhop) // create new bhop thing also make a crouch bhop.
 		if (bhop && GetAsyncKeyState(VK_SPACE) && 0x8000)
 		{
 			DWORD flag = *(BYTE*)(localPlayer + m_fFlags);
-			if (modget.getMovmentType() != 9 && modget.getplayerHealth() > 0 && flag & (1 << 0))
+			if (modget.getMovmentType() != MoveType::LADDER && modget.getplayerHealth() > 0 && flag & (1 << 0))
 			{
 				*(DWORD*)(CLIENT_DLL + dwForceJump) = 6;
 			}
-			else if(modget.getMovmentType() == 9)
+			else if(modget.getMovmentType() == MoveType::LADDER)
 			{
 				*(DWORD*)(CLIENT_DLL + dwForceJump) = 6;
 			}
@@ -43,11 +43,7 @@ void Misc::bhop(bool bhop) // create new bhop thing also make a crouch bhop.
 		}
 }
 
-int Misc::playercheck(int playercheck)
-{
-	playercheck = localPlayer;
-	return playercheck;
-}
+
 
 float Misc::velocity()
 {
