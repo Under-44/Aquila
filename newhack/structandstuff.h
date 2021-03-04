@@ -47,7 +47,9 @@ struct SGlowStructEnemy
 	float green = 0.f;
 	float blue = 0.f;
 	float alpha = 1.f;
-	char padding01[8];
+	bool rwo = true;
+	bool rwuo = false;
+	char padding01[6];
 	float alphakindathing = 1.f;
 	float POINTERTHING = 0;
 	BYTE renderOccluded = true;
@@ -61,7 +63,9 @@ struct SGlowStructLocal
 	float green = 1.f;
 	float blue = 0.f;
 	float alpha = 1.f;
-	char padding02[8];
+	bool rwo = true;
+	bool rwuo = false;
+	char padding02[6];
 	float alphakindathing = 1.f;
 	float POINTERTHING = 0;
 	BYTE renderOccluded = true;

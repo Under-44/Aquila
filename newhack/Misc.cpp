@@ -90,6 +90,7 @@ void Misc::Glow(bool glow, AquilaColor EnemyGlow, AquilaColor TeamGlow, bool ful
 			int glowindex = *(int*)(currentEntity + m_iGlowIndex);
 			int entityTeam = *(int*)(currentEntity + m_iTeamNum);
 
+
 			if (entityTeam == modget.getLocalTeam())
 			{
 				//Local Team
@@ -101,6 +102,7 @@ void Misc::Glow(bool glow, AquilaColor EnemyGlow, AquilaColor TeamGlow, bool ful
 				{
 					glowlocal.alpha = (eplSpeed / 500); // make the value a slider or use the alpha and just times it // do this
 				}
+
 				else
 					glowlocal.alpha = TeamGlow.a / static_cast<float>(95.2);
 				*(SGlowStructLocal*)(modget.getGlowObjectManager() + (glowindex * 0x38) + 0x4) = glowlocal;
@@ -109,6 +111,7 @@ void Misc::Glow(bool glow, AquilaColor EnemyGlow, AquilaColor TeamGlow, bool ful
 			{
 				//Enemy Team
 				glowenemy.fullBloom = fullbloomenemy;
+				
 				glowenemy.red = EnemyGlow.r;
 				glowenemy.green = EnemyGlow.g;
 				glowenemy.blue = EnemyGlow.b;
@@ -120,9 +123,7 @@ void Misc::Glow(bool glow, AquilaColor EnemyGlow, AquilaColor TeamGlow, bool ful
 					glowenemy.alpha = EnemyGlow.a / static_cast<float>(95.2);
 				*(SGlowStructEnemy*)(modget.getGlowObjectManager() + (glowindex * 0x38) + 0x4) = glowenemy;
 			}
-			*(bool*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0x24)) = true;
-			*(bool*)((modget.getGlowObjectManager() + glowindex * 0x38 + 0x25)) = false;
-		}
+		}b
 	}
 }
 
