@@ -22,13 +22,23 @@ Misc::Misc()
 }
 
 void Misc::bhop(bool bhop) // create new bhop thing also make a crouch bhop.
+						   // bhop fixed now just need to not move when velocity is 0,
+						   // also need to add when on a ladder it disables it.
 {
 		if (bhop && GetAsyncKeyState(VK_SPACE) && 0x8000)
 		{
 			DWORD flag = *(BYTE*)(localPlayer + m_fFlags);
-			if (modget.getplayerHealth() > 0 && flag & (1 << 0))
+			if (modget.getMovmentType() != 9 && modget.getplayerHealth() > 0 && flag & (1 << 0))
 			{
 				*(DWORD*)(CLIENT_DLL + dwForceJump) = 6;
+			}
+			else if(modget.getMovmentType() == 9)
+			{
+				*(DWORD*)(CLIENT_DLL + dwForceJump) = 6;
+			}
+			else
+			{
+				*(DWORD*)(CLIENT_DLL + dwForceJump) = 4;
 			}
 		}
 }
@@ -54,10 +64,6 @@ void Misc::noflash(float flash)
 
 void Misc::radar(bool radarHax)
 {
-
-	std::cout << modget.getCH();
-	system("CLS");
-
 	if (radarHax)
 	{
 		for (int i = 0; i < 32; i++)
@@ -69,7 +75,7 @@ void Misc::radar(bool radarHax)
 	}
 }
 
-void Misc::Glow(bool glow, AquilaColor EnemyGlow, AquilaColor TeamGlow, bool fullbloomlocal, bool fullbloomenemy, bool velocityglow_local, bool velocityglow_enemy) // optimise this. // make a entity class for this
+void Misc::Glow(bool glow, AquilaColor EnemyGlow, AquilaColor TeamGlow, bool fullbloomlocal, bool fullbloomenemy, bool velocityglow_local, bool velocityglow_enemy) // optimise this. // make a entity class for this // fix red square bug health thing
 {
 	if (glow)
 	{

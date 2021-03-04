@@ -51,3 +51,8 @@ int ModuleGet::getCH()
 {
 	return *(int*)(getLocalPlayer() + m_iCrosshairId);
 }
+
+int ModuleGet::getMovmentType()
+{
+	return *(int*)(getLocalPlayer() + m_MoveType);
+}

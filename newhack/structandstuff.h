@@ -36,6 +36,11 @@ enum class Entity_flagsCS : unsigned int {
 	in_water = (1 << 9)
 };
 
+enum class MoveType {
+	NOCLIP = 8,
+	LADDER = 9
+};
+
 struct SGlowStructEnemy
 {
 	float red = 1.f;
