@@ -13,6 +13,7 @@ ModuleGet modget;
 float flSpeed;
 bool once = true;
 bool soundbool = true;
+
 SGlowStructEnemy glowenemy;
 SGlowStructLocal glowlocal;
 
@@ -25,22 +26,22 @@ void Misc::bhop(bool bhop) // create new bhop thing also make a crouch bhop.
 						   // bhop fixed now just need to not move when velocity is 0,
 						   // also need to add when on a ladder it disables it.
 {
-		if (bhop && GetAsyncKeyState(VK_SPACE) && 0x8000)
+	if (bhop && GetAsyncKeyState(VK_SPACE) && 0x8000)
+	{
+		DWORD flag = *(BYTE*)(localPlayer + m_fFlags);
+		if (modget.getMovmentType() != MoveType::LADDER && modget.getplayerHealth() > 0 && flag & Entity_flagsCS::on_ground)
 		{
-			DWORD flag = *(BYTE*)(localPlayer + m_fFlags);
-			if (modget.getMovmentType() != MoveType::LADDER && modget.getplayerHealth() > 0 && flag & (1 << 0))
-			{
-				*(DWORD*)(CLIENT_DLL + dwForceJump) = 6;
-			}
-			else if(modget.getMovmentType() == MoveType::LADDER)
-			{
-				*(DWORD*)(CLIENT_DLL + dwForceJump) = 6;
-			}
-			else
-			{
-				*(DWORD*)(CLIENT_DLL + dwForceJump) = 4;
-			}
+			*(DWORD*)(CLIENT_DLL + dwForceJump) = 6;
 		}
+		else if (modget.getMovmentType() == MoveType::LADDER)
+		{
+			*(DWORD*)(CLIENT_DLL + dwForceJump) = 6;
+		}
+		else
+		{
+			*(DWORD*)(CLIENT_DLL + dwForceJump) = 4;
+		}
+	}
 }
 
 
@@ -94,7 +95,7 @@ void Misc::Glow(bool glow, AquilaColor EnemyGlow, AquilaColor TeamGlow, bool ful
 			if (entityTeam == modget.getLocalTeam())
 			{
 				//Local Team
-				glowlocal.fullBloom = fullbloomlocal;
+				glowlocal.fullBloom = fullbloomlocal; // you need to toggle this everytime a game is played with this enabled
 				glowlocal.red = TeamGlow.r;
 				glowlocal.green = TeamGlow.g;
 				glowlocal.blue = TeamGlow.b;
@@ -110,7 +111,7 @@ void Misc::Glow(bool glow, AquilaColor EnemyGlow, AquilaColor TeamGlow, bool ful
 			else if(entityTeam != modget.getLocalTeam())
 			{
 				//Enemy Team
-				glowenemy.fullBloom = fullbloomenemy;
+				glowenemy.fullBloom = fullbloomenemy; // you need to toggle this everytime a game is played with this enabled
 				
 				glowenemy.red = EnemyGlow.r;
 				glowenemy.green = EnemyGlow.g;
@@ -123,7 +124,7 @@ void Misc::Glow(bool glow, AquilaColor EnemyGlow, AquilaColor TeamGlow, bool ful
 					glowenemy.alpha = EnemyGlow.a / static_cast<float>(95.2);
 				*(SGlowStructEnemy*)(modget.getGlowObjectManager() + (glowindex * 0x38) + 0x4) = glowenemy;
 			}
-		}b
+		}
 	}
 }
 

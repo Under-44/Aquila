@@ -23,7 +23,7 @@ struct AquilaColor
 	// alpha, red, green, blue.
 };
 
-enum class Entity_flagsCS : unsigned int {
+enum Entity_flagsCS{
 	on_ground = (1 << 0),
 	ducking = (1 << 1),
 	water_jump = (1 << 2),
