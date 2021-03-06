@@ -7,9 +7,8 @@ public:
 	void bhop(bool bhop);
 	float velocity();
 	void noflash(float flash);
-	float heartbeat();
 	void PlayerDeathSound();
-	DWORD EntityPlayerListCheck(int i);
+	uintptr_t EntityPlayerListCheck(int i);
 	void radar(bool radarHax);
 	void Glow(bool glow, AquilaColor EnemyGlow, AquilaColor TeamGlow, bool fullbloomlocal, bool fullbloomenemy, bool velocityglow_local, bool velocityglow_enemy);
 private:

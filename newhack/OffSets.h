@@ -141,4 +141,7 @@
 #define m_yawClassPtr   0xD90AE0 
 #define model_ambient_min   0x59205C 
 #define set_abs_angles   0x1DF9C0 
-#define set_abs_origin   0x1DF800 
+#define set_abs_origin   0x1DF800
+
+
+

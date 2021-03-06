@@ -4,55 +4,55 @@
 #include "Misc.h"
 
 
-DWORD ModuleGet::getCLIENT_DLL()
+uintptr_t ModuleGet::getCLIENT_DLL()
 {
-	return (DWORD)GetModuleHandle("client.dll");
+	return reinterpret_cast<uintptr_t>(GetModuleHandle("client.dll"));
 }
 
-DWORD ModuleGet::getLocalPlayer()
+uintptr_t ModuleGet::getLocalPlayer()
 {
-	return *(DWORD*)(getCLIENT_DLL() + dwLocalPlayer);
+	return *reinterpret_cast<uintptr_t*>(getCLIENT_DLL() + dwLocalPlayer);
 }
 
 int ModuleGet::getplayerHealth()
 {
-	return *(int*)(getLocalPlayer() + m_iHealth);
+	return *reinterpret_cast<int*>(getLocalPlayer() + m_iHealth);
 }
-DWORD ModuleGet::getGlowObjectManager()
+uintptr_t ModuleGet::getGlowObjectManager()
 {
-	return *(DWORD*)(getCLIENT_DLL() + dwGlowObjectManager);
+	return *reinterpret_cast<uintptr_t*>(getCLIENT_DLL() + dwGlowObjectManager);
 }
 
-DWORD ModuleGet::getEntityList()
+uintptr_t ModuleGet::getEntityList()
 {
-	return *(DWORD*)(getCLIENT_DLL() + dwEntityList);
+	return *reinterpret_cast<uintptr_t*>(getCLIENT_DLL() + dwEntityList);
 }
 
 int ModuleGet::getLocalTeam()
 {
-	return *(int*)(getLocalPlayer() + m_iTeamNum);
+	return *reinterpret_cast<int*>(getLocalPlayer() + m_iTeamNum);
 }
 
 int ModuleGet::getCurrentEntityHealth(DWORD currentEntity)
 {
-	return *(int*)(currentEntity + m_iHealth);
+	return *reinterpret_cast<int*>(currentEntity + m_iHealth);
 }
 
 int ModuleGet::getCurrentEntityDormant(DWORD currentEntity)
 {
-	return *(int*)(currentEntity + m_bDormant);
+	return *reinterpret_cast<int*>(currentEntity + m_bDormant);
 }
 int ModuleGet::getplayerdormant()
 {
-	return *(int*)(getLocalPlayer() + m_bDormant);
+	return *reinterpret_cast<int*>(getLocalPlayer() + m_bDormant);
 }
 
 int ModuleGet::getCH()
 {
-	return *(int*)(getLocalPlayer() + m_iCrosshairId);
+	return *reinterpret_cast<int*>(getLocalPlayer() + m_iCrosshairId);
 }
 
 int ModuleGet::getMovmentType()
 {
-	return *(int*)(getLocalPlayer() + m_MoveType);
+	return *reinterpret_cast<int*>(getLocalPlayer() + m_MoveType);
 }

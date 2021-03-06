@@ -63,7 +63,7 @@ bool velocityglow_local = false;
 
 
 
-DWORD playercheck;
+uintptr_t playercheck;
 int healthv = 0;
 int bhop_timing = 0;  //	DO THIS :D
 int window_no_move = 4;
@@ -202,7 +202,7 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 		// END OF NEW_WINDOW/DEV_WINDOW
 		
 		//start of glow
-		if (glow) // really shit ui atm.
+		if (glow) // make this window closable, so the menu doesnt look so huge.
 		{
 			ImGui::Begin("Glow", 0,
 				ImGuiWindowFlags_NoResize

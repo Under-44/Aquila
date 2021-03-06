@@ -4,11 +4,11 @@
 class ModuleGet
 {
 public:
-	DWORD getCLIENT_DLL();
-	DWORD getLocalPlayer();
+	uintptr_t getCLIENT_DLL();
+	uintptr_t getLocalPlayer();
 	int getplayerHealth();
-	DWORD getEntityList();
-	DWORD getGlowObjectManager();
+	uintptr_t getEntityList();
+	uintptr_t getGlowObjectManager();
 	int getLocalTeam();
 	int getCurrentEntityHealth(DWORD currentEntity);
 	int getCurrentEntityDormant(DWORD currentEntity);
