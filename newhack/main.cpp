@@ -211,7 +211,7 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 				| ImGuiWindowFlags_NoMove);
 			ImGui::SetWindowSize(ImVec2(400, 750));
 			ImGui::SetWindowPos(ImVec2(MAINWINDOW_POS.x + 402, MAINWINDOW_POS.y));
-			ImGui::TextColored(ImVec4(25, 194, 98, 255), "Team");
+			ImGui::TextColored(ImColor(25, 194, 98, 255), "Team");
 			ImGui::Separator();
 			ImGui::Checkbox("FullBloom###localfullbloom", &fullBloomlocal);
 			ImGui::Checkbox("VelocityGlow###localvelocityglow", &velocityglow_local);
@@ -223,7 +223,7 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 			ImGui::SliderFloat("ALPHA###alpha1", &TeamGlow.a, 0.f, 100.f);
 			ImGui::Separator();
 
-			ImGui::TextColored(ImVec4(217, 72, 20, 255), "Enemy");
+			ImGui::TextColored(ImColor(217, 72, 20, 255), "Enemy");
 			ImGui::Separator();
 			ImGui::Checkbox("FullBloom###enemyfullbloom", &fullBloomenemy);
 			ImGui::Checkbox("VelocityGlow###enemyvelocityglow", &velocityglow_enemy);

@@ -4,7 +4,6 @@
 #include "ModuleGet.h"
 
 //..
-// change all the *(DWORD*) to c++ cast uintptr_t's.
 // also learn a bit more about the "this" key-word.
 //..
 
@@ -28,6 +27,9 @@ Misc::Misc()
 void Misc::bhop(bool bhop) // create new bhop thing also make a crouch bhop.
 						   // bhop fixed now just need to not move when velocity is 0,
 						   // also need to add when on a ladder it disables it.
+							
+						   // ??idea, add a chance of hitting a bhop slider.
+						   // also fix it jumping when out of program or in console or talking.
 {
 	if (bhop && GetAsyncKeyState(VK_SPACE))
 	{
@@ -100,7 +102,7 @@ void Misc::Glow(bool glow, AquilaColor EnemyGlow, AquilaColor TeamGlow, bool ful
 			if (entityTeam == modget.getLocalTeam())
 			{
 				//Local Team
-				glowlocal.fullBloom = fullbloomlocal; // you need to toggle this everytime a game is played with this enabled
+				glowlocal.fullBloom = fullbloomlocal; // you need to toggle this everytime a player joins a game.
 				glowlocal.red = TeamGlow.r;
 				glowlocal.green = TeamGlow.g;
 				glowlocal.blue = TeamGlow.b;
@@ -116,7 +118,7 @@ void Misc::Glow(bool glow, AquilaColor EnemyGlow, AquilaColor TeamGlow, bool ful
 			else if(entityTeam != modget.getLocalTeam())
 			{
 				//Enemy Team
-				glowenemy.fullBloom = fullbloomenemy; // you need to toggle this everytime a game is played with this enabled
+				glowenemy.fullBloom = fullbloomenemy; // you need to toggle this everytime a player joins a game.
 				
 				glowenemy.red = EnemyGlow.r;
 				glowenemy.green = EnemyGlow.g;
