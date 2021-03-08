@@ -8,6 +8,7 @@
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_win32.h"
 #include "imgui/imgui_impl_dx9.h"
+#include "imguicustom.h"
 #define WINDOW_NAME "Aquila"
 typedef long(__stdcall* EndScene)(LPDIRECT3DDEVICE9);
 typedef LRESULT(CALLBACK* WNDPROC)(HWND, UINT, WPARAM, LPARAM);
@@ -24,6 +25,7 @@ extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam
 EndScene oEndScene = NULL;
 WNDPROC oWndProc;
 static HWND window = NULL;
+imguicustom imcustom;
 
 void InitImGui(LPDIRECT3DDEVICE9 pDevice)
 {
@@ -33,14 +35,7 @@ void InitImGui(LPDIRECT3DDEVICE9 pDevice)
 	io->ConfigFlags = ImGuiConfigFlags_NoMouseCursorChange;
 	ImGui_ImplWin32_Init(window);
 	ImGui_ImplDX9_Init(pDevice);
-	ImGui::StyleColorsClassic();
-	ImGui::PushStyleColor(ImGuiCol_MenuBarBg, ImVec4(ImColor(127, 115, 177, 70)));
-	ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(ImColor(9, 6, 23, 200)));
-	style->WindowRounding = 0;
-	style->FrameRounding = 4;
-	style->GrabMinSize = 15;
-	style->WindowBorderSize = 0;
-	style->GrabRounding = 4;
+	imcustom.defaultstyle();
 	/*AllocConsole();
 	FILE* fDummy;
 	freopen_s(&fDummy, "CONIN$", "r", stdin);
@@ -89,6 +84,7 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 	if (!init)
 	{
 		InitImGui(pDevice);
+		
 		init = true;
 	}
 
@@ -107,10 +103,9 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 
 	flash255 = (flash * static_cast<float>(2.55)); // testing d3d9
 
+
 	if (isopen) // insert open
 	{
-		
-
 
 		// START OF MAIN_WINDOW
 		
@@ -121,14 +116,13 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 				| ImGuiWindowFlags_NoTitleBar);
 
 		
-
-		
 		ImGui::TextColored(ImVec4(ImColor(152, 126, 222, 255)), "Aquila");
 		if (ImGui::IsItemHovered())
 		{
+			
 			ImGui::SetTooltip("Made By: Under44");
 		}
-
+		
 		//	startmenubar
 		ImGui::BeginMenuBar();
 		if (ImGui::BeginMenu("tools"))
@@ -143,8 +137,6 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 		}
 		ImGui::EndMenuBar();
 		//	endmenubar
-				
-				
 				ImGui::Checkbox("BHOP", &bhop);
 				ImGui::Checkbox("RADAR", &radarHax);
 				ImGui::Checkbox("GLOW", &glow);
@@ -235,11 +227,8 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 			ImGui::SliderFloat("ALPHA###alpha2", &EnemyGlow.a, 0.f, 100.f);
 		ImGui::End();
 		}
-
 		//end of glow
 	}
-
-	
 
 	ImGui::EndFrame();
 	ImGui::Render();

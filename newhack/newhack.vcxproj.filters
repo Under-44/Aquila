@@ -69,6 +69,9 @@
     <ClCompile Include="ModuleGet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="imguicustom.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="kiero\minhook\src\buffer.h">
@@ -135,6 +138,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="structandstuff.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="imguicustom.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
