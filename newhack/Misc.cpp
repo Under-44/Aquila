@@ -13,6 +13,7 @@ ModuleGet modget; // object for modget's.
 float flSpeed;
 bool once = true;
 bool soundbool = true;
+int entityid;
 
 vec3 playerVel;
 
@@ -142,9 +143,6 @@ void Misc::Glow(bool glow, AquilaColor EnemyGlow, AquilaColor TeamGlow, bool ful
 // ??idea on how to do it is create a function the requires a index number, then return the struct with the data, then show that info
 // depending on what wiget you're focused on at that time.
 
-// ..Make a crosshair id on above your crosshair
-// got to have it show only if (id != 0);
-
 void Misc::PlayerDeathSound()
 {
 	if (modget.getplayerHealth() == 0 && soundbool == true)
@@ -160,6 +158,19 @@ void Misc::PlayerDeathSound()
 			soundbool = true;
 		}
 	}
+}
+
+int Misc::idcrosshair(bool crossidbool)
+{
+	if (crossidbool)
+	{
+		entityid = modget.getCH();
+		if (entityid != 0 && entityid < 32)
+		{
+			return entityid;
+		}
+	}
+	return FALSE;
 }
 
 uintptr_t Misc::EntityPlayerListCheck(int i)

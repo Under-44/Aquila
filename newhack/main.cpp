@@ -15,6 +15,9 @@ typedef LRESULT(CALLBACK* WNDPROC)(HWND, UINT, WPARAM, LPARAM);
 #include "Misc.h"
 #include "ModuleGet.h"
 
+//..
+// ??make ui sizes, for example, 125% 100% 150% 200%
+//..
 
 ModuleGet modget1;
 Misc misc;
@@ -55,7 +58,8 @@ bool fullBloomlocal = false;
 bool fullBloomenemy = false;
 bool velocityglow_enemy = false;
 bool velocityglow_local = false;
-
+bool glow_collapse = false;
+bool crossidbool = false;
 
 
 uintptr_t playercheck;
@@ -63,10 +67,12 @@ int healthv = 0;
 int bhop_timing = 0;  //	DO THIS :D
 int window_no_move = 4;
 int player_dormant;
+int playerid;
 
 float flspeed;
 float flash = 100;
 float flash255;
+
 
 
 AquilaColor TeamGlow = { 0.f, 1.f, 0.f, 100.f };  // red, green, blue, alpha
@@ -103,6 +109,24 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 
 	flash255 = (flash * static_cast<float>(2.55)); // testing d3d9
 
+	if (crossidbool && !GetAsyncKeyState(VK_TAB)) // optimise this after you understand how to use d3d9
+	{
+		ImGui::Begin("IDWINDOW", 0, 
+			  ImGuiWindowFlags_NoResize
+			| ImGuiWindowFlags_NoCollapse
+			| ImGuiWindowFlags_NoTitleBar
+			| ImGuiWindowFlags_NoMove
+			| ImGuiWindowFlags_NoBackground);
+		ImGui::SetWindowPos(ImVec2(1270, 680));
+		ImGui::SetWindowSize(ImVec2(100, 100));
+		if (playerid != 0 && playerid < 32)
+		{
+		std::string idcrosshairS = std::to_string(playerid);
+		ImGui::TextColored(ImColor(50, 168, 82) ,idcrosshairS.c_str());
+		}
+		
+		ImGui::End();
+	}
 
 	if (isopen) // insert open
 	{
@@ -139,14 +163,31 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 		//	endmenubar
 				ImGui::Checkbox("BHOP", &bhop);
 				ImGui::Checkbox("RADAR", &radarHax);
-				ImGui::Checkbox("GLOW", &glow);
-				ImGui::SliderFloat("", &flash, 0.f, 100, "%.2f");
-				if (ImGui::IsItemActive())
+				ImGui::Checkbox("GLOW", &glow);	if (glow)
+				{
+					ImGui::SameLine();
+					if (!glow_collapse)
+					{
+						if (ImGui::Button("open"))
+						{
+							glow_collapse = !glow_collapse;
+						}
+					}
+					else
+					{
+						if (ImGui::Button("close") && glow_collapse)
+						{
+							glow_collapse = !glow_collapse;
+						}
+					}
+				}
+				ImGui::SliderFloat("", &flash, 0.f, 100, "%.2f"); if (ImGui::IsItemActive())
 				{
 					ImGui::SetTooltip("FLASH");
 					D3DRECT rect = { 25, 25, 100, 100 };
 					pDevice->Clear(1, &rect, D3DCLEAR_TARGET, D3DCOLOR_ARGB(255, 255, static_cast<int>(flash255), 0), 0, 0);
 				}
+				ImGui::Checkbox("ID-ESP", &crossidbool);
 				if (ImGui::Button("UNHOOK"))
 				{
 					DllMain(0, 0, 0);
@@ -163,7 +204,7 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 		if (new_window)
 		{
 			ImGui::Begin("Developer Tool Window", &new_window, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | window_no_move);
-			ImGui::SetWindowSize(ImVec2(400, 130));
+			ImGui::SetWindowSize(ImVec2(400, 160));
 			if (window_no_move == 4)
 			{
 				ImGui::SetWindowPos(ImVec2(MAINWINDOW_POS.x, MAINWINDOW_POS.y + 262));
@@ -173,12 +214,14 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 			std::string FrameS = std::to_string(ImGui::GetIO().Framerate);
 			std::string flspeedS = std::to_string(flspeed);
 			std::string playerdormantS = std::to_string(player_dormant);
+			
 			FrameS.erase(6, 9);
 			flspeedS.erase(6, 9);
 			ImGui::Text(playercheckS.c_str()); ImGui::SameLine(); ImGui::Text(" | localPlayer");
 			ImGui::Text(healthS.c_str()); ImGui::SameLine(); ImGui::Text(" | Health");
 			ImGui::Text(flspeedS.c_str()); ImGui::SameLine(); ImGui::Text(" | Velocity");
 			ImGui::Text(playerdormantS.c_str()); ImGui::SameLine(); ImGui::Text(" | playerdormant");
+			
 			ImGui::Separator();
 			ImGui::Text(FrameS.c_str()); ImGui::SameLine(); ImGui::Text("UI.FPS");
 			ImGui::Separator();
@@ -194,7 +237,7 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 		// END OF NEW_WINDOW/DEV_WINDOW
 		
 		//start of glow
-		if (glow) // make this window closable, so the menu doesnt look so huge.
+		if (glow && glow_collapse) // make this window closable, so the menu doesnt look so huge.
 		{
 			ImGui::Begin("Glow", 0,
 				ImGuiWindowFlags_NoResize
@@ -301,6 +344,7 @@ DWORD WINAPI heavyThread(LPVOID lpReserved, HMODULE hMod)
 			misc.bhop(bhop);
 			misc.noflash(flash);
 			misc.Glow(glow, EnemyGlow, TeamGlow, fullBloomlocal, fullBloomenemy, velocityglow_local, velocityglow_enemy);
+			playerid = misc.idcrosshair(crossidbool);
 			if (!playercheck) { break; }
 			
 		}

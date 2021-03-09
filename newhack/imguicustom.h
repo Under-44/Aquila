@@ -9,6 +9,7 @@ public:
 	~imguicustom(); // deconstructor
 	void defaultstyle();
 	void stylealpha(float alpha);
+	void scalesize(float scale);
 private:
 
 };

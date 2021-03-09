@@ -35,3 +35,11 @@ void imguicustom::stylealpha(float alpha)
 	ImGuiStyle* style = &ImGui::GetStyle();
 	style->Alpha = alpha;
 }
+
+void imguicustom::scalesize(float scale) // +scale -scale
+{
+	ImGuiStyle* style = &ImGui::GetStyle();
+	style->ScaleAllSizes(scale);
+}
+
+// ??idea: create a custom color picker.
