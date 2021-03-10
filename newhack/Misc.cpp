@@ -143,6 +143,8 @@ void Misc::Glow(bool glow, AquilaColor EnemyGlow, AquilaColor TeamGlow, bool ful
 // ??idea on how to do it is create a function the requires a index number, then return the struct with the data, then show that info
 // depending on what wiget you're focused on at that time.
 
+//??idea create a translate text chat command.
+
 void Misc::PlayerDeathSound()
 {
 	if (modget.getplayerHealth() == 0 && soundbool == true)

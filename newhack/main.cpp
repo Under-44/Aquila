@@ -29,6 +29,8 @@ EndScene oEndScene = NULL;
 WNDPROC oWndProc;
 static HWND window = NULL;
 imguicustom imcustom;
+ImFont* comicsans;
+ImFont* defaultfont;
 
 void InitImGui(LPDIRECT3DDEVICE9 pDevice)
 {
@@ -38,6 +40,9 @@ void InitImGui(LPDIRECT3DDEVICE9 pDevice)
 	io->ConfigFlags = ImGuiConfigFlags_NoMouseCursorChange;
 	ImGui_ImplWin32_Init(window);
 	ImGui_ImplDX9_Init(pDevice);
+
+	defaultfont = io->Fonts->AddFontDefault();
+	comicsans = io->Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\comic.ttf", 16.f); // comic sans.
 	imcustom.defaultstyle();
 	/*AllocConsole();
 	FILE* fDummy;
@@ -107,6 +112,10 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
+		//font
+		ImGui::PushFont(comicsans);
+		//font
+
 	flash255 = (flash * static_cast<float>(2.55)); // testing d3d9
 
 	if (crossidbool && !GetAsyncKeyState(VK_TAB)) // optimise this after you understand how to use d3d9
@@ -138,8 +147,6 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 				| ImGuiWindowFlags_NoResize
 				| ImGuiWindowFlags_NoCollapse
 				| ImGuiWindowFlags_NoTitleBar);
-
-		
 		ImGui::TextColored(ImVec4(ImColor(152, 126, 222, 255)), "Aquila");
 		if (ImGui::IsItemHovered())
 		{
@@ -272,7 +279,7 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 		}
 		//end of glow
 	}
-
+	ImGui::PopFont();
 	ImGui::EndFrame();
 	ImGui::Render();
 	ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
