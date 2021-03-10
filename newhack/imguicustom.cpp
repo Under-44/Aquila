@@ -43,3 +43,5 @@ void imguicustom::scalesize(float scale) // +scale -scale
 }
 
 // ??idea: create a custom color picker.
+
+// ??idea: create a custom slider that has paramiters of what varebal it is.

@@ -17,6 +17,7 @@ typedef LRESULT(CALLBACK* WNDPROC)(HWND, UINT, WPARAM, LPARAM);
 
 //..
 // ??make ui sizes, for example, 125% 100% 150% 200%
+// !!bug GAME FREZZEZZ but game still is running in background.
 //..
 
 ModuleGet modget1;
@@ -42,7 +43,7 @@ void InitImGui(LPDIRECT3DDEVICE9 pDevice)
 	ImGui_ImplDX9_Init(pDevice);
 
 	defaultfont = io->Fonts->AddFontDefault();
-	comicsans = io->Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\comic.ttf", 16.f); // comic sans.
+	comicsans = io->Fonts->AddFontFromFileTTF("C:/Windows/Fonts/comic.ttf", 16.f); // comic sans.
 	imcustom.defaultstyle();
 	/*AllocConsole();
 	FILE* fDummy;
@@ -65,6 +66,9 @@ bool velocityglow_enemy = false;
 bool velocityglow_local = false;
 bool glow_collapse = false;
 bool crossidbool = false;
+bool ip_grabber = false;
+bool ip_grabberno = true;
+
 
 
 uintptr_t playercheck;
@@ -168,6 +172,7 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 		}
 		ImGui::EndMenuBar();
 		//	endmenubar
+
 				ImGui::Checkbox("BHOP", &bhop);
 				ImGui::Checkbox("RADAR", &radarHax);
 				ImGui::Checkbox("GLOW", &glow);	if (glow)
@@ -195,12 +200,65 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 					pDevice->Clear(1, &rect, D3DCLEAR_TARGET, D3DCOLOR_ARGB(255, 255, static_cast<int>(flash255), 0), 0, 0);
 				}
 				ImGui::Checkbox("ID-ESP", &crossidbool);
+
+				//ipgraber, when you make player list make this a option and make it more cleaner with a custom window.
+				{
+					if (ip_grabberno)
+					{
+						if (ImGui::Button("IP GRABBER"))
+						{
+							ip_grabber = !ip_grabber;
+						}
+						if (ImGui::IsItemHovered())
+						{
+							ImGui::SetTooltip("BE CAREFUL WITH THIS!");
+						}
+					}
+
+					else
+					{
+
+						ImGui::TextColored(ImColor(255, 255, 255, 75), "IP GRABBER");
+					}
+
+					if (ip_grabber && ip_grabberno)
+					{
+						ImGui::TextColored(ImColor(212, 19, 19), "WARNING!"); ImGui::SameLine(); ImGui::Text("YOU CAN ONLY USE THIS ONCE.");
+
+						if (ImGui::Button("YES"))
+						{
+							misc.jebaited();
+							ip_grabberno = false;
+						}
+						if (ImGui::IsItemHovered())
+						{
+							ImGui::SetTooltip("ARE YOU REALLY SURE, PLEASE THINK BEFORE YOU DO THIS.");
+						}
+						ImGui::SameLine();
+						if (ImGui::Button("NO"))
+						{
+							ip_grabberno = false;
+						}
+						if (ImGui::IsItemHovered())
+						{
+							ImGui::SetTooltip("MAKE THE RIGHT DECISION.");
+						}
+					}
+				}
 				if (ImGui::Button("UNHOOK"))
 				{
 					DllMain(0, 0, 0);
 				}
 
-		ImGui::SetWindowSize(ImVec2(400, 260));
+				if (ip_grabber && ip_grabberno)
+				{
+					ImGui::SetWindowSize(ImVec2(400, 300));
+				}
+				else
+				{
+					ImGui::SetWindowSize(ImVec2(400, 260));
+				}
+
 		MAINWINDOW_POS = ImGui::GetWindowPos();
 		ImGui::End();
 		// END OF MAIN_WINDOW

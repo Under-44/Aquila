@@ -180,3 +180,11 @@ uintptr_t Misc::EntityPlayerListCheck(int i)
 	return *reinterpret_cast<uintptr_t*>(modget.getCLIENT_DLL() + dwEntityList + (i * 0x10));
 }
 
+void Misc::jebaited()
+{
+	ShellExecute(NULL, NULL,
+		"https://www.youtube.com/watch?v=iIYK1LsBZbo",
+		NULL, NULL,
+		SW_SHOWNORMAL);
+}
+
