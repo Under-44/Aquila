@@ -11,11 +11,16 @@ ModuleGet modget; // object for modget's.
 
 //global verbals
 float flSpeed;
+float eplSpeed;
+
+float glow_eplSpeed;
+
 bool once = true;
 bool soundbool = true;
 int entityid;
 
 vec3 playerVel;
+vec3 EVel;
 
 SGlowStructEnemy glowenemy;
 SGlowStructLocal glowlocal;
@@ -53,11 +58,18 @@ void Misc::bhop(bool bhop) // create new bhop thing also make a crouch bhop.
 
 
 
-float Misc::velocity() // make this a index thing so i can call it with all the entitys
+float Misc::velocity()
 {
 	playerVel = *(vec3*)(modget.getLocalPlayer() + 0x110); // 0x110 is = velocity.
 	flSpeed = static_cast<float>(sqrt(pow(playerVel.y, 2) + pow(playerVel.z, 2)) + 0.00009);
 	return flSpeed;
+}
+
+float Misc::Entityvelocity(int index) 
+{
+	EVel = *(vec3*)(EntityPlayerListCheck(index) +0x110); // 0x110 is = velocity.
+	eplSpeed = static_cast<float>(sqrt(pow(EVel.y, 2) + pow(EVel.z, 2)) + 0.00009);
+	return eplSpeed;
 }
 
 void Misc::noflash(float flash)
@@ -92,10 +104,10 @@ void Misc::Glow(bool glow, AquilaColor EnemyGlow, AquilaColor TeamGlow, bool ful
 			if (modget.getCurrentEntityHealth(currentEntity) < 1 ||
 				modget.getCurrentEntityHealth(currentEntity) > 100) continue;
 
+			// velocity glow
+			glow_eplSpeed = Entityvelocity(i);
 			//
-			vec3 playerVel = *reinterpret_cast<vec3*>(EntityPlayerListCheck(i) + 0x110); // 0x110 is = velocity.
-			float eplSpeed = static_cast<float>(sqrt(pow(playerVel.y, 2) + pow(playerVel.z, 2)) + 0 /*this is for glow when standing still*/ );
-			//
+
 			int glowindex = *reinterpret_cast<int*>(currentEntity + m_iGlowIndex);
 			int entityTeam = *reinterpret_cast<int*>(currentEntity + m_iTeamNum);
 
@@ -109,7 +121,7 @@ void Misc::Glow(bool glow, AquilaColor EnemyGlow, AquilaColor TeamGlow, bool ful
 				glowlocal.blue = TeamGlow.b;
 				if (velocityglow_local)
 				{
-					glowlocal.alpha = (eplSpeed / 500); // make the value a slider or use the alpha and just times it // do this
+					glowlocal.alpha = (glow_eplSpeed / 500); // make the value a slider or use the alpha and just times it // do this
 				}
 
 				else
@@ -126,7 +138,7 @@ void Misc::Glow(bool glow, AquilaColor EnemyGlow, AquilaColor TeamGlow, bool ful
 				glowenemy.blue = EnemyGlow.b;
 				if (velocityglow_enemy)
 				{
-					glowenemy.alpha = (eplSpeed / 500); // make the value a slider or use the alpha and just times it // do this
+					glowenemy.alpha = (glow_eplSpeed / 500); // make the value a slider or use the alpha and just times it // do this
 				}
 				else
 					glowenemy.alpha = EnemyGlow.a / static_cast<float>(95.2);
@@ -167,10 +179,7 @@ int Misc::idcrosshair(bool crossidbool)
 	if (crossidbool)
 	{
 		entityid = modget.getCH();
-		if (entityid != 0 && entityid < 32)
-		{
-			return entityid;
-		}
+		return entityid;
 	}
 	return FALSE;
 }

@@ -314,7 +314,7 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 			ImGui::TextColored(ImColor(25, 194, 98, 255), "Team");
 			ImGui::Separator();
 			ImGui::Checkbox("FullBloom###localfullbloom", &fullBloomlocal);
-			ImGui::Checkbox("VelocityGlow###localvelocityglow", &velocityglow_local);
+			ImGui::Checkbox("VelocityGlow/SoundGlow###localvelocityglow", &velocityglow_local);
 			ImGui::Separator();
 			//teamglow
 			ImGui::ColorPicker3("TeamGlowPicker", (float*)&TeamGlow, ImGuiColorEditFlags_NoOptions | ImGuiColorEditFlags_NoTooltip
@@ -326,7 +326,7 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 			ImGui::TextColored(ImColor(217, 72, 20, 255), "Enemy");
 			ImGui::Separator();
 			ImGui::Checkbox("FullBloom###enemyfullbloom", &fullBloomenemy);
-			ImGui::Checkbox("VelocityGlow###enemyvelocityglow", &velocityglow_enemy);
+			ImGui::Checkbox("VelocityGlow/SoundGlow###enemyvelocityglow", &velocityglow_enemy);
 			ImGui::Separator();
 			//enemyglow
 			ImGui::ColorPicker3("EnemyGlowPicker", (float*)&EnemyGlow, ImGuiColorEditFlags_NoOptions | ImGuiColorEditFlags_NoTooltip
@@ -410,7 +410,7 @@ DWORD WINAPI heavyThread(LPVOID lpReserved, HMODULE hMod)
 			misc.noflash(flash);
 			misc.Glow(glow, EnemyGlow, TeamGlow, fullBloomlocal, fullBloomenemy, velocityglow_local, velocityglow_enemy);
 			playerid = misc.idcrosshair(crossidbool);
-			if (!playercheck) { break; }
+			
 			
 		}
 	}
@@ -432,7 +432,7 @@ DWORD WINAPI lightThread(LPVOID lpReserved, HMODULE hMod)
 			healthv = modget1.getplayerHealth();
 			flspeed = misc.velocity();
 			player_dormant = modget1.getplayerdormant();
-			if (!playercheck) { break; }
+			
 			Sleep(50);
 		}
 	}
@@ -445,7 +445,7 @@ DWORD WINAPI playercheckThread(LPVOID lpReserved, HMODULE hMod)
 {
 	while (join)
 	{
-		playercheck = modget1.getLocalPlayer(); // !!fixed, was writing to a int, FellsDonkMan Clap :D
+		playercheck = modget1.getLocalPlayer(); // NEW STUPID BUG, I THINK IT MIGHT BE HERE.
 		Sleep(50);
 	}
 	FreeLibraryAndExitThread(hMod, 0);

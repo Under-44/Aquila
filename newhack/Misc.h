@@ -6,6 +6,7 @@ public:
 	Misc();
 	void bhop(bool bhop);
 	float velocity();
+	float Entityvelocity(int index);
 	void noflash(float flash);
 	void PlayerDeathSound();
 	int idcrosshair(bool crossidbool);
