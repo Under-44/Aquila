@@ -1,4 +1,6 @@
 # Aquila v0.1
-cheat i have been working on for a lil, work by me only.
+yeah i know its shit.
+i wanted to learn but there was so many road bumps
+so now this is public.
 
 <a href="https://github.com/HeathHowren/CSGO-ImGui-DX9-Kiero-Hook">here is the base</a>
