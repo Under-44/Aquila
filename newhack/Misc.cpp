@@ -21,6 +21,7 @@ int entityid;
 
 vec3 playerVel;
 vec3 EVel;
+vec3 FinalPostion;
 
 SGlowStructEnemy glowenemy;
 SGlowStructLocal glowlocal;
@@ -60,14 +61,14 @@ void Misc::bhop(bool bhop) // create new bhop thing also make a crouch bhop.
 
 float Misc::velocity()
 {
-	playerVel = *(vec3*)(modget.getLocalPlayer() + 0x110); // 0x110 is = velocity.
+	playerVel = *reinterpret_cast<vec3*>(modget.getLocalPlayer() + 0x110); // 0x110 is = velocity.
 	flSpeed = static_cast<float>(sqrt(pow(playerVel.y, 2) + pow(playerVel.z, 2)) + 0.00009);
 	return flSpeed;
 }
 
 float Misc::Entityvelocity(int index) 
 {
-	EVel = *(vec3*)(EntityPlayerListCheck(index) +0x110); // 0x110 is = velocity.
+	EVel = *reinterpret_cast<vec3*>(modget.getEntityPlayerListCheck(index) + 0x110); // 0x110 is = velocity.
 	eplSpeed = static_cast<float>(sqrt(pow(EVel.y, 2) + pow(EVel.z, 2)) + 0.00009);
 	return eplSpeed;
 }
@@ -84,7 +85,7 @@ void Misc::radar(bool radarHax)
 	{
 		for (int i = 0; i < 32; i++)
 		{
-			uintptr_t currentEntity = EntityPlayerListCheck(i);
+			uintptr_t currentEntity = modget.getEntityPlayerListCheck(i);
 			if (currentEntity == 0) continue;
 			*reinterpret_cast<int*>(currentEntity + m_bSpotted) = 1;
 		}
@@ -98,7 +99,7 @@ void Misc::Glow(bool glow, AquilaColor EnemyGlow, AquilaColor TeamGlow, bool ful
 	{
 		for (int i = 0; i < 32; i++)
 		{
-			uintptr_t currentEntity = EntityPlayerListCheck(i);
+			uintptr_t currentEntity = modget.getEntityPlayerListCheck(i);
 
 			if (currentEntity == 0) continue;
 			if (modget.getCurrentEntityHealth(currentEntity) < 1 ||
@@ -184,9 +185,29 @@ int Misc::idcrosshair(bool crossidbool)
 	return FALSE;
 }
 
-uintptr_t Misc::EntityPlayerListCheck(int i)
+vec3 Misc::EntityPos(int index) // bug here fix it, id 10 crashs the game
 {
-	return *reinterpret_cast<uintptr_t*>(modget.getCLIENT_DLL() + dwEntityList + (i * 0x10));
+	return *reinterpret_cast<vec3*>(modget.getEntityPlayerListCheck(index) + m_vecOrigin);
+}
+
+vec3 Misc::PlayerPos()
+{
+	return *reinterpret_cast<vec3*>(modget.getLocalPlayer() + m_vecOrigin);
+}
+
+float Misc::EntityDistanceFromPlayer(bool crossidbool, int index)
+{
+	if (crossidbool)
+	{
+		if (modget.getEntityHealth(index) != 0)
+		{
+			FinalPostion.x = PlayerPos().x - EntityPos(index - 1).x;
+			FinalPostion.y = PlayerPos().y - EntityPos(index - 1).y;
+
+			return static_cast<float>(sqrt(pow(FinalPostion.x, 2) + pow(FinalPostion.y, 2)));
+		}
+	}
+	return FALSE;
 }
 
 void Misc::jebaited()
@@ -196,4 +217,5 @@ void Misc::jebaited()
 		NULL, NULL,
 		SW_SHOWNORMAL);
 }
+
 

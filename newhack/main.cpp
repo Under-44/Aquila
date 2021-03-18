@@ -48,7 +48,6 @@ void InitImGui(LPDIRECT3DDEVICE9 pDevice)
 	/*AllocConsole();
 	FILE* fDummy;
 	freopen_s(&fDummy, "CONIN$", "r", stdin);
-	freopen_s(&fDummy, "CONOUT$", "w", stderr);
 	freopen_s(&fDummy, "CONOUT$", "w", stdout);
 	printf("Debugging Window:\n");*/ // this is a debug console
 }
@@ -81,6 +80,7 @@ int playerid;
 float flspeed;
 float flash = 100;
 float flash255;
+float DistanceFrom;
 
 
 
@@ -135,7 +135,9 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 		if (playerid != 0 && playerid < 32)
 		{
 		std::string idcrosshairS = std::to_string(playerid);
+		std::string DistanceFromS = std::to_string(DistanceFrom);
 		ImGui::TextColored(ImColor(50, 168, 82) ,idcrosshairS.c_str());
+		ImGui::Text(DistanceFromS.c_str());
 		}
 		
 		ImGui::End();
@@ -410,8 +412,8 @@ DWORD WINAPI heavyThread(LPVOID lpReserved, HMODULE hMod)
 			misc.noflash(flash);
 			misc.Glow(glow, EnemyGlow, TeamGlow, fullBloomlocal, fullBloomenemy, velocityglow_local, velocityglow_enemy);
 			playerid = misc.idcrosshair(crossidbool);
-			
-			
+			DistanceFrom = misc.EntityDistanceFromPlayer(crossidbool, 10);
+
 		}
 	}
 		FreeLibraryAndExitThread(hMod, 0);
@@ -432,7 +434,6 @@ DWORD WINAPI lightThread(LPVOID lpReserved, HMODULE hMod)
 			healthv = modget1.getplayerHealth();
 			flspeed = misc.velocity();
 			player_dormant = modget1.getplayerdormant();
-			
 			Sleep(50);
 		}
 	}

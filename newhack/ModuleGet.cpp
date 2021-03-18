@@ -18,6 +18,17 @@ int ModuleGet::getplayerHealth()
 {
 	return *reinterpret_cast<int*>(getLocalPlayer() + m_iHealth);
 }
+
+uintptr_t ModuleGet::getEntityPlayerListCheck(int index)
+{
+	return *reinterpret_cast<uintptr_t*>(getCLIENT_DLL() + dwEntityList + (index * 0x10));
+}
+
+int ModuleGet::getEntityHealth(int index)
+{
+	return *reinterpret_cast<int*>(getEntityPlayerListCheck(index) + m_iHealth);
+}
+
 uintptr_t ModuleGet::getGlowObjectManager()
 {
 	return *reinterpret_cast<uintptr_t*>(getCLIENT_DLL() + dwGlowObjectManager);
